@@ -50,5 +50,5 @@ showStep "creating archive"
 ./createArchive.sh -n $NETWORK_NAME
 showStep "starting network"
 ./startup.sh
-showStep "deploying network"
+echo "=====deploying network"
 ./deployNetwork.sh -n $NETWORK_NAME
