@@ -99,7 +99,7 @@ showStep "starting network"
 # change in documentation
 # composer network start --card PeerAdmin@hlfv1 --networkAdmin admin --networkAdminEnrollSecret adminpw --archiveFile $NETWORK_NAME.bna --file networkadmin.card
 # corrected to: 
-composer network start -c PeerAdmin@hlfv1 -A admin -S adminpw -a $NETWORK_NAME.bna --file networkadmin.card
+composer network deploy -c PeerAdmin@hlfv1 -A admin -S adminpw -a $NETWORK_NAME.bna --file networkadmin.card
 showStep "importing networkadmin card"
 if composer card list -n admin@$NETWORK_NAME > /dev/null; then
     composer card delete -n admin@$NETWORK_NAME
