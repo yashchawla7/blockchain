@@ -3,7 +3,7 @@
     "composer": ""
   },
   "name": "intellectual-property-network",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "Intellectual property registration blockchain network",
   "networkImage": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimage.svg",
   "networkImageanimated": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimageanimated.svg",
