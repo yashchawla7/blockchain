@@ -47,7 +47,7 @@ function printHelp ()
 function printHeader ()
 {
     echo ""
-    echo -e "${YELLOW}network archive, start and deploy script for the Zero To Blockchain Series" | indent
+    echo -e "${YELLOW}network archive, start and deploy script for the Intellectual property registration blockchain Series" | indent
     echo -e "${GREEN}This has been tested on Mac OSX thru High Sierra and Ubuntu V16 LTS" | indent
     echo -e "${YELLOW}This script will create your Composer archive" | indent
     echo ""

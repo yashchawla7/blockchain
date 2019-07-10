@@ -1,5 +1,5 @@
 /**
- * Zero To Blockchain multi-party finance network
+ * Intellectual property registration blockchain multi-party finance network
  */
 namespace org.acme.IPRTestNetwork
 import composer.base.*
