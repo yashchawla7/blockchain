@@ -95,11 +95,14 @@ showStep "deploying network"
 cd network/dist
 showStep "installing PeerAdmin card"
 composer runtime install --card PeerAdmin@hlfv1 --businessNetworkName $NETWORK_NAME
-showStep "starting network"
+
 # change in documentation
 # composer network start --card PeerAdmin@hlfv1 --networkAdmin admin --networkAdminEnrollSecret adminpw --archiveFile $NETWORK_NAME.bna --file networkadmin.card
 # corrected to: 
-composer network deploy -c PeerAdmin@hlfv1 -A admin -S adminpw -a $NETWORK_NAME.bna --file networkadmin.card
+showStep "installing network"
+composer network install --archiveFile $NETWORK_NAME.bna -c PeerAdmin@hlfv1
+showStep "starting network"
+composer network start -c PeerAdmin@hlfv1 -A admin -S adminpw -a $NETWORK_NAME.bna --file networkadmin.card
 showStep "importing networkadmin card"
 if composer card list -n admin@$NETWORK_NAME > /dev/null; then
     composer card delete -n admin@$NETWORK_NAME
