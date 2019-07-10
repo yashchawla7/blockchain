@@ -3,6 +3,10 @@
  */
 namespace org.acme.IPRTestNetwork
 
+abstract participant Member {
+  o String companyName
+}
+
 participant Buyer identified by buyerID extends Member{
     o String buyerID
 }
