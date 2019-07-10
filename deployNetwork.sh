@@ -93,8 +93,9 @@ showStep "deploying network"
 # documentation for v0.15
 #
 cd network/dist
-showStep "installing PeerAdmin card"
-composer runtime install --card PeerAdmin@hlfv1 --businessNetworkName $NETWORK_NAME
+showStep "$PWD"
+#showStep "installing PeerAdmin card"
+#composer runtime install --card PeerAdmin@hlfv1 --businessNetworkName $NETWORK_NAME
 
 # change in documentation
 # composer network start --card PeerAdmin@hlfv1 --networkAdmin admin --networkAdminEnrollSecret adminpw --archiveFile $NETWORK_NAME.bna --file networkadmin.card
