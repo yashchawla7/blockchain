@@ -1,0 +1,2709 @@
+App = {
+    baseURL: `http://${window.location.hostname}:3000/api`,
+    showAutoPopulate: false,
+    maxResourceProviderLimitCount: 4,
+    STACK_STATUS: ['CREATED', 'ACCEPTED', 'PROGRESS', 'COMPLETE', 'APPROVED'],
+    page: 'register',//register //test
+    tempEmail: [],
+    currOrg: {},
+    currIndex: 0,
+    tempCanvas: [],
+    currCanvasIndex: 0,
+    currComment: [],
+    formsJSON: [],
+    init: function () {
+        console.log("App initialized....");
+
+        console.log('BaseURL', App.baseURL);
+
+        //App.formsJSON = JSON.parse(forms);
+        //console.log('Forms JSON', App.formsJSON)
+
+        App.loadpages();
+    },
+    loadpages: function () {
+        App.showloader(true);
+        switch (App.page) {
+            case 'test':
+                $('#container').empty();
+                $('#container').load('test.html')
+                break;
+            case 'register':
+                App.loadRegisterPage();
+                break;
+            default:
+                break;
+        }
+        App.showloader(false);
+    },
+    testFunction: function () {
+        let dataFile = $('#userPhoto').val();
+        let exampleInputEmail1 = $('#exampleInputEmail1').val();
+
+        console.log("=========================[main.js]==================================")
+        console.log("dataFile", dataFile)
+        console.log("exampleInputEmail1", exampleInputEmail1)
+
+        var formData = new FormData($('#userPhoto')[0]);
+
+        console.log("FormData", formData)
+
+        /*$.ajax({
+            url: App.baseURL + "/blockchain/upload",
+            type: 'POST',
+            data: formData,
+            async: false,
+            success: function (data) {
+                alert(data)
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });*/
+
+        let payload = {
+            filename: dataFile,
+            file: formData
+        }
+
+        $.post(App.baseURL + "/blockchain/upload-data-file", payload, function (data, status) {
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data.status) {
+
+                    //App.showloader(false)
+                    console.log(data.message);
+                    console.log(data);
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString, 'loadpages');
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+        }, "json")
+
+    },
+    autoPopulateFunction: function () {
+
+
+        var payloads = '[{"subtype":"Entrepreneur","fullname":"Papan Das1","organizationname":"Papan Das1","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"ent01@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Entrepreneur","fullname":"Papan Das2","organizationname":"Papan Das2","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"ent02@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Entrepreneur","fullname":"Papan Das3","organizationname":"Papan Das3","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"ent03@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Entrepreneur","fullname":"Papan Das4","organizationname":"Papan Das4","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"ent04@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Entrepreneur","fullname":"Papan Das5","organizationname":"Papan Das5","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"ent05@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Resource Provider-Financial","fullname":"Resource Provider1","organizationname":"Resource Provider1","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"respro01@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Resource Provider-Financial","fullname":"Resource Provider2","organizationname":"Resource Provider2","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"respro02@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Resource Provider-Financial","fullname":"Resource Provider3","organizationname":"Resource Provider3","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"respro03@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Resource Provider-Financial","fullname":"Resource Provider4","organizationname":"Resource Provider4","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"respro04@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"},{"subtype":"Resource Provider-Financial","fullname":"Resource Provider5","organizationname":"Resource Provider5","category":"PreStartUp/StartUp","numberofemployees":"0","businessmaturity":"conception","industryofbusiness":"11 Agriculture, Forestry, Fishing and Hunting","emailid":"respro05@gmail.com","address":"Road No 2, Opp Shee Guru Vidyamandir High School, Champashri Anchal","country":"USA","state":"New York","city":"Los Angeles","zip":"734003","website":"","phone":"9641443962","isActive":false,"type":"organization","feedback":"","param":"{\\"match\\":[],\\"canvas\\":[]}"}]';
+
+
+        let currCount = 0;
+        var myVar = setInterval(myTimer, 6000);
+
+        function myTimer() {
+            var payload = JSON.parse(payloads);
+
+            if (currCount >= payload.length) {
+                clearInterval(myVar);
+                console.log("Auto Population process complete.")
+            } else {
+                App.autoPopulatePayload(payload[currCount]);
+                console.log(currCount, 'Auto-Populate');
+                currCount++;
+            }
+        }
+
+    },
+    autoPopulatePayload: function (payload) {
+
+        $.post(App.baseURL + "/blockchain/register-organization", payload, function (data, status) {
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data.message === 'User registered') {
+                    console.log("Auot-Populate Success", data)
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString, 'loadpages');
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+        }, "json")
+    },
+    loadRegisterPage: function () {
+        $('#container').empty();
+
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            //App.loadOrgCanvasOnLandingPage();
+
+            //console.log("Data: " + JSON.stringify(data));
+
+            if (status === 'success') {
+
+                if (data.success) {
+                    console.log("Load", data.canvas.register.length)
+
+                    let str = `<form class="form-signin">`
+                    str += `<h2 class="form-signin-heading text-center">Register with us</h2>`
+                    str += `<hr/>`
+                    for (let i = 0; i < data.canvas.register.length; i++) {
+                        //console.log()
+                        //str += `<p class="text-center">${data.canvas.register[i].description}</p>`
+                        str += `<button class="btn btn-lg btn-`
+                        str += (data.canvas.register[i].form.length > 0) ? `primary` : `secondary`
+                        str += ` btn-block" type="submit" onclick="App.loadRegisterFormFromCanvas('${i}'); return false;">${data.canvas.register[i].description}</button>`;
+                        str += `<hr/>`
+                    }
+
+                    if (App.showAutoPopulate) {
+                        str += `<button class="btn btn-lg btn-light btn-block" type="submit" onclick="App.autoPopulateFunction(); return false;">Auto Populate</button>`
+                    }
+                    //
+                    str += `</form>`
+                    $('#container').html(str)
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadpages');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+
+        });
+
+        /*$('#container').load('register.html', function () {
+            $('#OrganizationTypeSelect').empty()
+
+            let str = '<select class="custom-select d-block w-100" id="OrganizationType" required>';
+            str += '<option value="">Choose...</option>';
+            for (let each in App.ParticipantType) {
+                (function (idx, arr) {
+                    str += '<option>' + arr[idx].name + '</option>';
+                })(each, App.ParticipantType)
+            }
+            str += '</select>';
+
+            $('#OrganizationTypeSelect').html(str)
+
+            // Customize Form
+
+            
+        });*/
+    },
+    loadRegisterFormFromCanvas: function (param) {
+        console.log("Hit on Load RegisteryForm")
+        console.log(param)
+
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+                    //console.log("Form", data.canvas.register[param])
+
+                    if (data.canvas.register[param].form.length == 0) {
+
+                        let errorString = 'There is no available form data for this organization registration. Please try again later.';
+                        App.loadErrorMessage(errorString, 'loadpages');
+                        return;
+                    }
+
+                    $('#container').empty()
+
+                    let formStr = '<form class="needs-validation" novalidate>';
+                    formStr += `<div class="py-5 text-center"><h2>${data.canvas.register[param].name} register form</h2><p class="lead">${data.canvas.register[param].long_description}</p></div>`
+
+                    formStr += '<div class="row">'
+                    formStr += '<div class="col-md-12 order-md-1">'
+
+                    for (let each in data.canvas.register[param].form) {
+                        (function (idx, arr) {
+                            formStr += App.genFormItem(arr[idx]);
+                        })(each, data.canvas.register[param].form)
+                    }
+
+                    formStr += `<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="App.SaveToBC_OrgRegistration(${param}); return false;">Register me</button>`;
+
+                    formStr += '</div>'
+                    formStr += '</div>'
+                    //formStr += '</div>';
+                    formStr += '</form>';
+
+                    $('#container').html(formStr)
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadpages');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+
+        });
+    },
+    SaveToBC_OrgRegistration: function (param) {
+        //console.log("Which Form", param, typeof param);
+        //console.log(App.formsJSON[param])
+        //console.log("Hit on Test Form Return")
+        //console.log(param)
+
+        App.showloader(true)
+
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+
+                    //console.log(data.canvas.register[param].form)
+
+                    let email = '';
+                    let payload = {};
+
+                    for (let each in data.canvas.register[param].form) {
+                        (function (idx, arr) {
+                            //formStr += App.genFormItem(arr[idx]);
+                            //console.log(idx, arr[idx])
+                            let _label = arr[idx].label
+                            let _labelIds = App.returnLabelId(_label);
+                            let isRequired = arr[idx].required;
+                            //console.log(_labelIds);
+                            let value = $('#' + _labelIds.toLowerCase());
+
+
+                            if (value.val() != null && value.val() != undefined) {
+                                //console.log(_label, ':==>', value.val());
+                                payload[_labelIds.toLowerCase()] = value.val();
+                            } else {
+                                switch (arr[idx].type) {
+                                    case 'radio':
+                                        //console.log(_label, $("input[name='organizationtype1']:checked").val())
+                                        payload[_labelIds.toLowerCase()] = $("input[name='organizationtype1']:checked").val()
+                                        break;
+                                    case 'checkbox':
+                                        let checkValues = []
+                                        $("input[name='organizationtype2']:checked").each(function () {
+                                            //console.log(_label, this.value);
+                                            checkValues.push(this.value)
+                                        });
+                                        payload[_labelIds.toLowerCase()] = checkValues;
+                                        break;
+                                    default:
+                                        console.log(_label + "/" + _labelIds + " value not found. ")
+                                        if (isRequired) {
+                                            let errorString = 'Field ' + _label + ' is Missing. Kindly fill the form and submit again.';
+                                            App.loadErrorMessage(errorString, 'loadpages');
+                                        }
+                                        break;
+                                }
+                            }
+                        })(each, data.canvas.register[param].form)
+                    }
+
+                    if (data.canvas.register[param].name === "Entrepreneur") {
+                        payload['subtype'] = data.canvas.register[param].name;
+                    } else {
+                        payload['subtype'] = payload['resourceprovidertype'];
+                    }
+
+                    console.log("==== PAYLOAD ====")
+                    console.log(payload);
+
+
+
+                    $.post(App.baseURL + "/blockchain/register-organization", payload, function (data, status) {
+
+                        if (status === 'success') {
+                            //console.log(data[0].organizationDetails)
+                            if (data.message === 'User registered') {
+
+                                App.showloader(false)
+
+                                $('#container').html('<div class="row"><div class="alert alert-success"><strong>Success!</strong> Organization details has been successful saved to the Pivot.City blockchain network. Transaction id: ' + data.TxnID + '</div></div><div class="row"><div class="btn-group btn-group-justified"><button onclick="App.loadRegisterPage();" class="btn btn-primary">Ok</button></div></div>');
+                            } else {
+                                let errorString = 'Error executing query list.';
+                                App.loadErrorMessage(errorString, 'loadpages');
+                            }
+                        } else {
+                            let errorString = 'Unable to get api service calls.';
+                            App.loadErrorMessage(errorString, 'loadpages');
+                        }
+                    }, "json")
+
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadpages');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+
+        });
+
+
+    },
+
+    /**
+     * 
+     * ADMIN PORTAIL
+     * 
+     */
+
+    loadAdminLoginPage: function () {
+        $('#container').load('admin-login.html')
+    },
+    loadAdminTopMenu: function (param) {
+        var adminTopMenu = `<ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link`
+        if (param === 0) {
+            adminTopMenu += ` active`
+        }
+        adminTopMenu += `" onclick="App.loadAdminDashboardPageAfterLogin(); return false;">Organization List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link`
+        if (param === 1) {
+            adminTopMenu += ` active`
+        }
+        adminTopMenu += `" onclick="App.loadAdminMatchMakingPage(); return false;">Role Assignments</a>
+        </li>
+    </ul><br/>`
+
+        return adminTopMenu;
+    },
+    loadAdminDashboardPageAfterLogin: function () {
+        $.get(App.baseURL + "/blockchain/get-org-list", function (data, status) {
+            //console.log("Data: " + data.message + "\nStatus: " + status);
+            if (status === 'success') {
+                App.tempEmail = [];
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+                    var bodyStr = '<table class="table"><thead><tr><th scope="col">#</th><th scope="col">Organization Name</th><th scope="col">Organization Type</th><th scope="col">Email</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead><tbody>';
+                    for (let each in data[0].organizationDetails) {
+                        (function (idx, arr) {
+                            //console.log('==> ', arr[idx]);
+                            App.tempEmail.push({ 'Key': arr[idx].Key, 'isActive': arr[idx].Record.isActive });
+                            var email = arr[idx].Key;
+                            bodyStr += '<tr><th scope="row">' + (parseInt(idx) + 1) + '</th>';
+                            bodyStr += '<td>' + arr[idx].Record.organizationname + '</td>';
+                            bodyStr += '<td>' + arr[idx].Record.subtype + '</td>';
+                            bodyStr += '<td>' + arr[idx].Record.emailid + '</td>';
+                            //danger warning
+                            bodyStr += '<td><div class="alert alert-' + (arr[idx].Record.isActive === false ? 'danger' : 'warning') + '"><strong>' + (arr[idx].Record.isActive === false ? 'Inactive' : 'Active') + '</strong></div></td>';
+                            bodyStr += '<td><button onclick="App.loadAdminOrganizationDetail(' + idx + ')" type="button" class="btn btn-primary">View</button></td></tr>';
+                        })(each, data[0].organizationDetails)
+                    }
+                    bodyStr += '</tbody></table>';
+                    $('#container').html(App.loadAdminTopMenu(0) + bodyStr);
+                    App.showloader(false)
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+        });
+    },
+    loadAdminDashboardPage: function () {
+        const uname = $('#inputEmail').val();
+        const pass = $('#inputPassword').val();
+
+        $('#container').empty();
+        App.showloader(true)
+
+        if (uname === 'admin' && pass === 'admin') {
+            App.loadAdminDashboardPageAfterLogin();
+        } else {
+            App.loadErrorMessage('Invalid username or password. Try again later.', 'loadAdminLoginPage');
+        }
+
+
+        //$('#container').load('dashboard.html');
+
+
+    },
+    loadAdminOrganizationDetail: function (param) {
+        App.currIndex = param;
+        console.log("Load organization detail for ", App.tempEmail[param].Key)
+        //App.showloader(true);
+        $('#container').empty();
+        App.showloader(true)
+        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": App.tempEmail[param].Key }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+                    let org = data[0].organizationDetails
+                    console.log(org)
+
+
+                    $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+                        if (status === 'success') {
+
+                            if (data.success) {
+
+                                let index = 0;
+
+                                if (org.subtype === "Entrepreneur") {
+                                    index = 0;
+                                } else {
+                                    index = 1;
+                                }
+
+                                $('#container').empty()
+
+                                let formStr = '';
+                                formStr += `<div class="py-5 text-center"><h2>${data.canvas.register[index].name} profile detail</h2><p class="lead">${data.canvas.register[index].long_description}</p></div>`
+
+                                formStr += '<div class="row">'
+                                formStr += '<div class="col-md-12 order-md-1">'
+
+                                for (let each in data.canvas.register[index].form) {
+                                    (function (idx, arr) {
+                                        //console.log('#',arr[idx]);
+                                        let _label = arr[idx].label;
+                                        let _labelIds = App.returnLabelId(_label);
+                                        arr[idx].value = org[_labelIds.toLowerCase()];
+                                        arr[idx].disable = true;
+                                        //console.log('###',arr[idx]);
+                                        formStr += App.genFormItem(arr[idx]);
+                                    })(each, data.canvas.register[index].form)
+                                }
+
+
+
+                                formStr += '</div>'
+                                formStr += '</div>'
+                                //formStr += '</div>';
+                                formStr += '<div class="btn-group btn-group-justified"><button onclick="App.loadAdminDashboardPageAfterLogin();" class="btn btn-primary">Back to list</button><button onclick="App.revokeOrganizationAccess()" class="btn btn-' + (org.isActive === false ? 'success' : 'danger') + '">' + (org.isActive === false ? 'Active' : 'Deactive') + '</button></div><br/><br/>'
+
+                                $('#container').html(formStr)
+
+                                App.showloader(false)
+
+                            } else {
+                                let errorString = 'Error on Get Canvas';
+                                App.loadErrorMessage(errorString, 'loadpages');
+                            }
+
+                        } else {
+                            let errorString = 'Unable to get api service calls.';
+                            App.loadErrorMessage(errorString, 'loadpages');
+                        }
+                    });
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+
+    },
+    revokeOrganizationAccess: function () {
+        //console.log(App.tempEmail[App.currIndex].Key, App.tempEmail[App.currIndex].isRevoked);
+        App.showloader(true);
+        $('#container').empty();
+        //let tempemail = 
+        let temp = App.tempEmail[App.currIndex].isActive === true ? false : true;
+        //console.log('Changing to ', temp)
+        $.post(App.baseURL + "/blockchain/revoke-organization-access", { "email": App.tempEmail[App.currIndex].Key, "revokeAccess": temp }, function (data, status) {
+            console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data.status === true) {
+                    App.showloader(false);
+                    App.loadSuccessMessage(data.message, 'loadAdminDashboardPageAfterLogin');
+                } else {
+                    App.loadErrorMessage(data.message, 'loadAdminDashboardPageAfterLogin');
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadAdminDashboardPageAfterLogin');
+            }
+        }, "json")
+    },
+    loadAdminMatchMakingPage: function () {
+        $('#container').empty();
+        App.showloader(true);
+
+        $.get(App.baseURL + "/blockchain/get-org-list", function (data, status) {
+            //console.log("Data: " + data.message + "\nStatus: " + status);
+            if (status === 'success') {
+                App.tempEmail = [];
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+
+
+                    var bodyStr = `<h2>List of Orgination</h2>`
+
+                    let entrepreneurList = [];
+                    let resourceproviders = [];
+
+                    for (let each in data[0].organizationDetails) {
+                        (function (idx, arr) {
+                            bodyStr += `<div class="row`
+                            if (arr[idx].Record.subtype == "Entrepreneur") { bodyStr += ` bg-light` }
+                            bodyStr += `"><div class="col">
+                        <div class="col">${arr[idx].Record.organizationname}
+                        </div><div class="col">
+                        ${arr[idx].Record.emailid}
+                        </div><div class="col">Is Active: 
+                        ${arr[idx].Record.isActive}
+                        </div></div><div class="col">`
+
+                            var param = JSON.parse(arr[idx].Record.param)
+                            //console.log(param, typeof param)
+                            for (let each in param.match) {
+                                (function (_idx, _arr) {
+                                    // List of assigned Resource Providers
+                                    bodyStr += `<div class="col" >${_arr[_idx]}</div>`
+                                })(each, param.match)
+                            }
+
+
+                            bodyStr += `</div></div><hr/>`
+
+                            if (arr[idx].Record.isActive) {
+                                if (arr[idx].Record.subtype == "Entrepreneur") {
+                                    entrepreneurList.push(arr[idx].Record.emailid)
+                                } else {
+                                    resourceproviders.push(arr[idx].Record.emailid)
+                                }
+                            }
+                        })(each, data[0].organizationDetails)
+                    }
+
+                    bodyStr += `<h3>Configure Role Assignments</h3>`
+
+                    bodyStr += `<form class="needs-validation" novalidate><div class="row">
+                                    <div class="col">
+                                        <select class="form-control" id="match-entrepreneur">
+                                            <option selected disabled>Entrepreneur</option>`
+                    for (let each in entrepreneurList) {
+                        (function (__idx, __arr) {
+                            // List of assigned Entrepreneur
+                            bodyStr += `<option value="${__arr[__idx]}">${__arr[__idx]}</option>`
+                        })(each, entrepreneurList)
+                    }
+                    bodyStr += `</select>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-control" id="match-resource-provider">
+                                            <option selected disabled>Resource Provider</option>`
+                    for (let each in resourceproviders) {
+                        (function (__idx, __arr) {
+                            // List of assigned Resource Providers
+                            bodyStr += `<option value="${__arr[__idx]}">${__arr[__idx]}</option>`
+                        })(each, resourceproviders)
+                    }
+                    bodyStr += `</select>
+                                    </div>
+                                    <div class="col">`
+                    bodyStr += `<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="App.saveAdminMatchMaking(); return false;">Assign Role</button>`
+                    bodyStr += `</div>
+                                </div></form><br/>`
+
+
+                    $('#container').html(App.loadAdminTopMenu(1) + bodyStr);
+                    App.showloader(false)
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+        });
+
+        //
+    },
+    saveAdminMatchMaking: function () {
+        let matchEntrepreneur = $('#match-entrepreneur').find(':selected').val();
+        let matchResourceProvider = $('#match-resource-provider').find(':selected').val();
+
+        if (matchEntrepreneur != "Entrepreneur" && matchResourceProvider != "Resource Provider") {
+            console.log("Match Entrepreneur", matchEntrepreneur, "with", matchResourceProvider)
+
+            App.showloader(true)
+
+            $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": matchEntrepreneur }, function (data, status) {
+                //console.log("Data: " + data + "\nStatus: " + status);
+
+                if (status === 'success') {
+                    //console.log(data[0].organizationDetails)
+                    if (data[0].message === 'Query Successful') {
+
+                        let org = data[0].organizationDetails
+
+                        console.log("Entrepreneur organization details")
+                        console.log(org)
+
+                        var param = JSON.parse(org.param);
+
+                        let isExist = false;
+
+
+                        if (param.match.length >= App.maxResourceProviderLimitCount) {
+                            App.loadErrorMessage('Total assigned Resource provider, maximum limit reached', 'loadAdminMatchMakingPage');
+                            return;
+                        }
+
+                        for (let each in param.match) {
+                            (function (idx, arr) {
+                                // List of assigned Resource Providers
+                                if (matchResourceProvider === arr[idx]) {
+                                    isExist = true;
+                                }
+                            })(each, param.match)
+                        }
+
+                        if (isExist) {
+                            App.loadErrorMessage('Resource provider ' + matchResourceProvider + ' already exist with Entrepreneur', 'loadAdminMatchMakingPage')
+                        } else {
+
+                            param.match.push(matchResourceProvider);
+
+                            $.post(App.baseURL + "/blockchain/update-param", { "emailid": matchEntrepreneur, "param": JSON.stringify(param) }, function (data, status) {
+                                //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                                if (status === 'success') {
+                                    //console.log(data[0].organizationDetails)
+                                    if (data.status === true) {
+                                        //App.showloader(false);
+                                        //App.loadSuccessMessage(data.message, 'loadAdminMatchMakingPage');
+
+                                        console.log("================ENTREPRENEUR UPDATED====================")
+
+                                        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": matchResourceProvider }, function (data, status) {
+                                            //console.log("Data: " + data + "\nStatus: " + status);
+
+                                            if (status === 'success') {
+                                                //console.log(data[0].organizationDetails)
+                                                if (data[0].message === 'Query Successful') {
+
+                                                    let org = data[0].organizationDetails
+
+                                                    console.log("Resource provider organization details")
+                                                    console.log(org)
+
+                                                    var param2 = JSON.parse(org.param);
+
+                                                    let isExist = false;
+
+                                                    for (let each in param2.match) {
+                                                        (function (idx, arr) {
+                                                            // List of assigned Resource Providers
+                                                            if (matchEntrepreneur === arr[idx]) {
+                                                                isExist = true;
+                                                            }
+                                                        })(each, param2.match)
+                                                    }
+
+                                                    if (isExist) {
+                                                        App.loadErrorMessage('Entrepreneur ' + matchResourceProvider + ' already exist with Resource provider', 'loadAdminMatchMakingPage')
+                                                    } else {
+
+                                                        param2.match.push(matchEntrepreneur);
+
+                                                        $.post(App.baseURL + "/blockchain/update-param", { "emailid": matchResourceProvider, "param": JSON.stringify(param2) }, function (data, status) {
+                                                            //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                                                            if (status === 'success') {
+                                                                //console.log(data[0].organizationDetails)
+                                                                if (data.status === true) {
+                                                                    App.showloader(false);
+                                                                    App.loadSuccessMessage(data.message, 'loadAdminMatchMakingPage');
+                                                                } else {
+                                                                    App.loadErrorMessage(data.message, 'loadAdminMatchMakingPage');
+                                                                }
+                                                            } else {
+                                                                let errorString = 'Unable to get api service calls.';
+                                                                App.loadErrorMessage(errorString, 'loadAdminMatchMakingPage');
+                                                            }
+                                                        }, "json")
+
+                                                    }
+
+                                                } else {
+                                                    let errorString = 'Error executing query list.';
+                                                    App.loadErrorMessage(errorString);
+                                                }
+                                            } else {
+                                                let errorString = 'Unable to get api service calls.';
+                                                App.loadErrorMessage(errorString);
+                                            }
+
+                                        }, "json")
+
+
+
+                                    } else {
+                                        App.loadErrorMessage(data.message, 'loadAdminMatchMakingPage');
+                                    }
+                                } else {
+                                    let errorString = 'Unable to get api service calls.';
+                                    App.loadErrorMessage(errorString, 'loadAdminMatchMakingPage');
+                                }
+                            }, "json")
+
+                        }
+
+                    } else {
+                        let errorString = 'Error executing query list.';
+                        App.loadErrorMessage(errorString);
+                    }
+                } else {
+                    let errorString = 'Unable to get api service calls.';
+                    App.loadErrorMessage(errorString);
+                }
+
+            }, "json")
+        } else {
+            App.loadErrorMessage('Please select a valid Entrepreneur & Resource Provider', 'loadAdminMatchMakingPage')
+        }
+    },
+    /**
+     * 
+     * Organization Portail
+     * 
+     */
+
+    loadOrgLoginPage: function () {
+        $('#container').empty();
+        $('#container').load('org-login.html');
+    },
+    loadOrgLandingPage: function () {
+        const representativeEmail = $('#inputEmail').val();
+        const pass = $('#inputPassword').val();
+        $('#container').empty();
+        App.showloader(true);
+
+        if (pass.toLowerCase() === 'password' && representativeEmail != '' && representativeEmail != undefined) {
+            $.post(App.baseURL + "/blockchain/login-organization", { "representativeEmail": representativeEmail }, function (data, status) {
+                //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+
+                if (status === 'success') {
+                    //console.log(data[0].organizationDetails)
+                    if (data.status === true) {
+                        App.showloader(false);
+                        App.currOrg = data.organizationDetails;
+                        console.log(App.currOrg);
+
+                        App.loadOrgProfilePage();
+
+
+
+                    } else {
+                        App.loadErrorMessage(data.message, 'loadOrgLoginPage');
+                    }
+                } else {
+                    App.loadErrorMessage(data.message, 'loadOrgLoginPage');
+                }
+            }, "json")
+        } else {
+            App.loadErrorMessage('Invalid username or passwored. Please try again later.', 'loadOrgLoginPage');
+        }
+
+    },
+    loadOrgProfilePage: function () {
+
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+
+                    let index = App.currOrg.subtype === "Entrepreneur" ? 0 : 1;
+
+
+                    $('#container').empty()
+
+                    let formStr = '';
+                    formStr += `<div class="py-5 text-center"><h2>${App.currOrg.subtype} Profile Detail</h2><p class="lead">${data.canvas.register[index].long_description}</p></div>`
+
+                    formStr += '<div class="row">'
+                    formStr += '<div class="col-md-12 order-md-1">'
+
+                    for (let each in data.canvas.register[index].form) {
+                        (function (idx, arr) {
+                            //console.log('#',arr[idx]);
+                            let _label = arr[idx].label;
+                            let _labelIds = App.returnLabelId(_label);
+                            arr[idx].value = App.currOrg[_labelIds.toLowerCase()];
+                            arr[idx].disable = true;
+                            //console.log('###',arr[idx]);
+                            formStr += App.genFormItem(arr[idx]);
+                        })(each, data.canvas.register[index].form)
+                    }
+
+                    formStr += '</div>'
+                    formStr += '</div><br/><br/>'
+
+                    //$('#container').html(formStr)
+
+                    $('#container').html(App.loadOrgSideMenu(formStr));
+
+                    App.showloader(false)
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadOrgLoginPage');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadOrgLoginPage');
+            }
+        });
+
+
+    },
+    loadOrgSideMenu: function (param) {
+        let reply = `<div class="row row-offcanvas row-offcanvas-right">
+
+            <div class="col-xs-12 col-sm-9" id="org-landing-container">
+                ${param}
+            </div>
+        
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+                <div class="list-group">
+                    <a href="#" class="list-group-item" onclick="App.loadOrgProfilePage();">Profile</a>`
+        if (App.currOrg.subtype === "Entrepreneur") {
+            reply += `<a href="#" class="list-group-item" onclick="App.loadOrgMyStakePage();">My Stack</a>`
+            reply += `<a href="#" class="list-group-item" onclick="App.loadOrgCanvasSharedWithMePage();">Canvas shared with me</a>`
+        } else {
+            reply += `<a href="#" class="list-group-item" onclick="App.loadOrgAssignCanvasPage();">Assign Stack</a>`
+        }
+
+        reply += `</div></div></div>`
+
+        return reply;
+    },
+
+    /**
+     *  Load My Stack Page
+     *  For the Entrepreneur
+     *  the stack which are assigned Entrepreneur Organization.
+     */
+    loadOrgMyStakePage: function () {
+
+        $('#container').empty();
+
+
+        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": App.currOrg.emailid }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+                    let org = data[0].organizationDetails
+                    var param = JSON.parse(org.param);
+
+
+
+                    //console.log(param.canvas, typeof param.canvas)
+
+
+
+                    let bodyStr = `<h3>Assigned Stack - ${org.emailid}</h3>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Assigned By</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>`
+
+                    //var param = JSON.parse(org.param);
+
+                    for (let each in param.stack) {
+                        (function (idx, arr) {
+                            // List of assigned Resource Providers
+                            var stackData = JSON.parse(arr[idx]);
+                            // name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0
+
+                            let time = Date.now(stackData.createdOn);
+
+                            let statusDivName = stackData.name.replace(/\s/g, '').toLowerCase() + 'status';
+
+                            bodyStr += `<tr>
+                                <th scope="row">${parseInt(idx) + 1}</th>
+                                <td>${new Date(time).toISOString()}</td>
+                                <td>${stackData.name}</td>
+                                <td><div id="${statusDivName}">${stackData.status}</div></td>
+                                <td>${stackData.assignedBy}</td>
+                                <td>`
+                            if (stackData.status === App.STACK_STATUS[0]) {
+                                bodyStr += `<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="App.updateStackData(${stackData.createdOn},'${App.STACK_STATUS[1]}','${App.currOrg.emailid}'); return false;">Accept</button>`
+                            } else {
+                                bodyStr += `<button class="btn btn-success btn-lg btn-block" type="submit" onclick="App.loadOrgStartStackPage('${stackData.name}',${stackData.createdOn},'${stackData.assignedBy}'); return false;">Load</button>`
+                            }
+                            bodyStr += `</td>
+                            </tr>`
+                        })(each, param.stack)
+                    }
+
+                    bodyStr += `</tbody></table><hr/>`
+
+                    $('#container').html(App.loadOrgSideMenu(bodyStr));
+
+                    $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+                        //console.log("Data: " + JSON.stringify(data));
+
+                        if (status === 'success') {
+
+                            if (data.success) {
+
+                                //console.log("param.stack", param.stack);
+
+                                for (let i = 0; i < param.stack.length; i++) {
+                                    var stackData = JSON.parse(param.stack[i]);
+                                    //console.log("Stack", stackData, stackData.status, App.STACK_STATUS[1], (stackData.status === App.STACK_STATUS[1]))
+                                    if (stackData.status === App.STACK_STATUS[1]) {
+                                        for (let j = 0; j < data.canvas.stack.length; j++) {
+
+                                            if (stackData.name === data.canvas.stack[j].name) {
+
+                                                let statusDivName = stackData.name.replace(/\s/g, '').toLowerCase() + 'status';
+                                                let totalCanvasLength = data.canvas.stack[i].canvas.length;
+                                                let stackId = j;
+                                                let tempCanvasIndexArray = [];
+
+                                                for (let k = 0; k < param.canvas.length; k++) {
+                                                    var canvasData = JSON.parse(param.canvas[k]);
+                                                    var parseCanvasIndex = canvasData.index.split('-');
+                                                    //console.log("Canvas Data", canvasData.index, typeof canvasData)
+                                                    //console.log("parseCanvasIndex", parseCanvasIndex)
+                                                    //console.log("totalCanvasLength", totalCanvasLength)
+                                                    if (stackId === parseInt(parseCanvasIndex[0])) {
+                                                        tempCanvasIndexArray.push(parseInt(parseCanvasIndex[1]));
+                                                    }
+                                                }
+                                                //console.log("parseCanvasIndex.length === totalCanvasLength", tempCanvasIndexArray.length, totalCanvasLength)
+                                                if (tempCanvasIndexArray.length === totalCanvasLength) {
+                                                    //console.log("All Canvas Complete");
+                                                    $(`#${statusDivName}`).empty();
+                                                    $(`#${statusDivName}`).html(`<button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.updateStackData(${stackData.createdOn},'${App.STACK_STATUS[3]}','${App.currOrg.emailid}'); return false;">Completed</button>`);
+                                                } else {
+                                                    console.log("Canvas pending. Total Submited canvas ", tempCanvasIndexArray.length);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                let errorString = 'Error on Get Canvas';
+                                App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                            }
+
+                        } else {
+                            let errorString = 'Unable to get api service calls.';
+                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                        }
+
+                    });
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+
+    },
+    loadOrgStartStackPage: function (assignedStackName, stackCreatedOn, stackAssigneby) {
+        $('#container').empty();
+
+
+        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": App.currOrg.emailid }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data[0].status) {
+
+
+                    let org = data[0].organizationDetails
+                    var param = JSON.parse(org.param);
+
+                    $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+                        //console.log("Data: " + JSON.stringify(data));
+
+                        if (status === 'success') {
+
+                            if (data.success) {
+
+                                console.log(data.canvas.stack[0].canvas)
+
+                                console.log("Get-Canvas")
+
+
+                                let bodyStr = `<h3>Canvas List</h3>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Canvas Name</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>`
+
+                                for (let i = 0; i < data.canvas.stack.length; i++) {
+                                    if (data.canvas.stack[i].name === assignedStackName) {
+                                        //console.log(data.canvas.stack[i])
+                                        for (let j = 0; j < data.canvas.stack[i].canvas.length; j++) {
+                                            //console.log(data.canvas.canvas[data.canvas.stack[i].canvas[j]].name)
+
+
+                                            let hasCompletedThisCanvas = false;
+                                            let canvasId = 0;
+                                            for (let each in param.canvas) {
+                                                (function (idx, arr) {
+                                                    //console.log("=======CANVAS ITEM on PROFILE===========")
+                                                    //console.log(stackCreatedOn, stackAssigneby)
+                                                    //console.log(arr[idx])
+                                                    const canvasData = JSON.parse(arr[idx]);
+                                                    //console.log("Canvas Index", typeof canvasData.index)
+                                                    //console.log(data.canvas.stack[i].id, j)
+                                                    //if (canvasData.index === data.canvas.canvas[data.canvas.stack[i].canvas[j]].id) {
+                                                    if (canvasData.index === (data.canvas.stack[i].id + '-' + j)) {
+                                                        hasCompletedThisCanvas = true;
+                                                        canvasId = canvasData.canvasId;
+                                                    }
+
+                                                })(each, param.canvas)
+                                            }
+
+                                            bodyStr += `<tr>
+                                                <th scope="row">${j + 1}</th>
+                                                <td>${data.canvas.canvas[data.canvas.stack[i].canvas[j]].name}</td>
+                                                <td>${data.canvas.canvas[data.canvas.stack[i].canvas[j]].description}</td>
+                                                <td>`
+                                            if (hasCompletedThisCanvas) {
+                                                bodyStr += `<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="App.loadOrgCompletedCanvasPage('${canvasId}'); return false;">View</button>`
+                                            } else {
+                                                let canvasIndex = data.canvas.stack[i].id + '-' + j;
+                                                bodyStr += `<button class="btn btn-success btn-lg btn-block" type="submit" onclick="App.loadOrgCanvasPage(${data.canvas.canvas[data.canvas.stack[i].canvas[j]].id},'${canvasIndex}', ${stackCreatedOn},'${stackAssigneby}'); return false;">Start</button>`
+                                            }
+
+                                            bodyStr += `</td>
+                                            </tr>`
+                                        }
+                                    }
+                                }
+
+                                bodyStr += `</tbody>
+                                    </table>`
+
+                                $('#container').html(App.loadOrgSideMenu(bodyStr));
+
+                            } else {
+                                let errorString = 'Error on Get Canvas';
+                                App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                            }
+
+                        } else {
+                            let errorString = 'Unable to get api service calls.';
+                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                        }
+
+                    });
+
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+
+
+    },
+    loadOrgCanvasPage: function (canvasId, canvasIndex, stackCreatedOn, stackAssigneby) {
+        $('#container').empty();
+
+        //console.log("loadOrgCanvasPage::canvasIndex", canvasIndex, typeof canvasIndex);
+
+
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            //console.log("Data: " + JSON.stringify(data));
+
+            if (status === 'success') {
+
+                if (data.success) {
+
+
+                    //data.canvas.canvas[canvasId];
+
+
+                    if (data.canvas.canvas[canvasId].form.length == 0) {
+
+                        let errorString = 'There is no available form data for this canvas. Please try again later.';
+                        App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                        return;
+                    }
+
+                    $('#container').empty()
+
+                    let formStr = '<form class="needs-validation" novalidate>';
+                    formStr += `<div class="py-5 text-center"><h2>${data.canvas.canvas[canvasId].name}</h2><p class="lead">${data.canvas.canvas[canvasId].long_description}</p></div>`
+
+                    formStr += '<div class="row">'
+                    formStr += '<div class="col-md-12 order-md-1">'
+
+                    for (let each in data.canvas.canvas[canvasId].form) {
+                        (function (idx, arr) {
+                            formStr += App.genFormItem(arr[idx]);
+                        })(each, data.canvas.canvas[canvasId].form)
+                    }
+
+                    formStr += `<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="App.SaveToBC_Canvas(${canvasId}, '${canvasIndex}', ${stackCreatedOn},'${stackAssigneby}'); return false;">Submit Canvas</button>`;
+
+                    formStr += '</div>'
+                    formStr += '</div>'
+                    //formStr += '</div>';
+                    formStr += '</form>';
+
+
+                    $('#container').html(App.loadOrgSideMenu(formStr));
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+            }
+
+        });
+    },
+    SaveToBC_Canvas: function (param, canvasIndex, stackCreatedOn, stackAssigneby) {
+        //console.log("Which Form", param, typeof param);
+        //console.log(App.formsJSON[param])
+        //console.log("Hit on Test Form Return")
+        //console.log("SaveToBC_Canvas::canvasIndex", canvasIndex, typeof canvasIndex);
+
+        App.showloader(true)
+
+        // Read Canvas JSON for Input Fields.
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+
+                    //console.log(data.canvas.canvas[param].form)
+
+
+                    let payload = {};
+
+                    for (let each in data.canvas.canvas[param].form) {
+                        (function (idx, arr) {
+                            //formStr += App.genFormItem(arr[idx]);
+                            //console.log(idx, arr[idx])
+                            let _label = arr[idx].label
+                            let _labelIds = App.returnLabelId(_label);
+                            //console.log(_labelIds)
+                            let isRequired = arr[idx].required;
+                            //console.log(_labelIds);
+                            let value = $('#' + _labelIds.toLowerCase());
+
+
+                            if (value.val() != null && value.val() != undefined) {
+                                //console.log(_label, ':==>', value.val());
+                                payload[_labelIds.toLowerCase()] = value.val();
+                            } else {
+                                switch (arr[idx].type) {
+                                    case 'radio':
+                                        const radioVal = $(`input[name='${_labelIds.toLowerCase()}']:checked`).val();
+                                        //console.log("Radio Corner");
+                                        //console.log(_labelIds.toLowerCase(), radioVal)
+                                        //console.log("Radio", $(`input[name='${_labelIds.toLowerCase()}']:checked`).val())
+                                        //console.log(_label, $("input[name='organizationtype1']:checked").val())
+                                        if (isRequired && radioVal === undefined) {
+                                            let errorString = 'Field ' + _label + ' is Missing. Kindly fill the canvas and submit again.';
+                                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                            return;
+                                        } else {
+                                            payload[_labelIds.toLowerCase()] = radioVal
+                                        }
+
+                                        break;
+                                    case 'checkbox':
+                                        let checkValues = []
+                                        $(`input[name='${_labelIds.toLowerCase()}']:checked`).each(function () {
+                                            //console.log(_label, this.value);
+                                            checkValues.push(this.value)
+                                        });
+                                        payload[_labelIds.toLowerCase()] = checkValues;
+                                        break;
+
+                                    default:
+                                        console.log(arr[idx].type + ":::" + _label + "/" + _labelIds + " value not found. ")
+                                        if (isRequired) {
+                                            let errorString = 'Field ' + _label + ' is Missing. Kindly fill the canvas and submit again.';
+                                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                            return;
+                                        }
+                                        break;
+                                }
+                            }
+
+                            if (parseInt(idx) + 1 >= data.canvas.canvas[param].form.length) {
+
+                                //console.log("============================== SHOT CANVAS")
+
+                                console.log("==== CANVAS PAYLOAD ====")
+                                const ts = Date.now();
+                                const canvasId = 'canvas' + ts.toString();
+                                payload['canvasid'] = canvasId;
+                                payload['submitedBy'] = App.currOrg.emailid;
+                                payload['submitedOn'] = ts;
+                                payload['canvasIndex'] = param;
+                                payload['stackAssignedBy'] = stackAssigneby;
+                                payload['stackCreatedOn'] = stackCreatedOn;
+
+
+                                //console.log(stackCreatedOn, stackAssigneby)
+                                console.log(payload);
+
+                                $.post(App.baseURL + "/blockchain/save-canvas", payload, function (data, status) {
+
+                                    if (status === 'success') {
+                                        //console.log(data[0].organizationDetails)
+                                        if (data.status) {
+
+                                            //App.showloader(false)
+
+                                            //$('#container').html('<div class="row"><div class="alert alert-success"><strong>Success!</strong> Organization details has been successful saved inside blockchain network. Transaction id: ' + data.TxnID + '</div></div><div class="row"><div class="btn-group btn-group-justified"><button onclick="App.loadRegisterPage();" class="btn btn-primary">Ok</button></div></div>');
+
+                                            /**
+                                             * Update user profile data for Canvas Submission
+                                             */
+
+
+                                            $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": App.currOrg.emailid }, function (data, status) {
+                                                //console.log("Data: " + data + "\nStatus: " + status);
+
+                                                if (status === 'success') {
+                                                    //console.log(data[0].organizationDetails)
+                                                    if (data[0].message === 'Query Successful') {
+
+                                                        let org = data[0].organizationDetails
+
+                                                        console.log("Entrepreneur organization details")
+                                                        console.log(org)
+
+                                                        var orgParam = JSON.parse(org.param);
+                                                        // param.stack.push(JSON.stringify({ name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0 }));
+                                                        orgParam.canvas.push(JSON.stringify({ assignedBy: stackAssigneby, createdOn: stackCreatedOn, canvasId: canvasId, index: canvasIndex, feedback: false }));
+                                                        console.log("New Param to update.", orgParam)
+
+
+                                                        $.post(App.baseURL + "/blockchain/update-param", { "emailid": App.currOrg.emailid, "param": JSON.stringify(orgParam) }, function (data, status) {
+                                                            //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                                                            if (status === 'success') {
+                                                                //console.log(data[0].organizationDetails)
+                                                                if (data.status === true) {
+                                                                    App.showloader(false);
+                                                                    App.loadSuccessMessage('Canvas status data for organization updated successfully.', 'loadOrgMyStakePage');
+                                                                } else {
+                                                                    App.loadErrorMessage(data.message, 'loadOrgMyStakePage');
+                                                                }
+                                                            } else {
+                                                                let errorString = 'Unable to get api service calls.';
+                                                                App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                                            }
+                                                        }, "json")
+
+                                                    } else {
+                                                        let errorString = 'Error executing query list.';
+                                                        App.loadErrorMessage(errorString);
+                                                    }
+                                                } else {
+                                                    let errorString = 'Unable to get api service calls.';
+                                                    App.loadErrorMessage(errorString);
+                                                }
+
+                                            }, "json")
+
+
+
+
+
+                                        } else {
+                                            let errorString = 'Error executing query list.';
+                                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                        }
+                                    } else {
+                                        let errorString = 'Unable to get api service calls.';
+                                        App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                    }
+                                }, "json")
+
+                            }
+                        })(each, data.canvas.canvas[param].form)
+                    }
+
+
+
+
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+
+        });
+
+
+    },
+    loadOrgCompletedCanvasPage: function (canvasId) {
+
+        $.post(App.baseURL + "/blockchain/get-canvas-by-id", { "canvasId": canvasId }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data)
+                if (data.status) {
+
+                    let canvasData = data.canvas
+
+                    //console.log(" Canvas data by ID")
+                    //console.log(canvasData)
+
+
+                    $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+                        if (status === 'success') {
+
+                            if (data.success) {
+
+                                let index = parseInt(canvasData.canvasIndex);
+
+
+                                $('#container').empty()
+
+                                let formStr = '';
+                                formStr += `<div class="py-5 text-center"><h2>${data.canvas.canvas[index].name} profile detail</h2><p class="lead">${data.canvas.canvas[index].long_description}</p></div>`
+
+                                formStr += '<div class="row">'
+                                formStr += '<div class="col-md-12 order-md-1">'
+
+                                for (let each in data.canvas.canvas[index].form) {
+                                    (function (idx, arr) {
+                                        //console.log('#',arr[idx]);
+                                        let _label = arr[idx].label;
+                                        let _labelIds = App.returnLabelId(_label);
+                                        arr[idx].value = canvasData[_labelIds.toLowerCase()];
+                                        arr[idx].disable = true;
+                                        //console.log('###',arr[idx]);
+                                        formStr += App.genFormItem(arr[idx]);
+                                    })(each, data.canvas.canvas[index].form)
+                                }
+
+                                formStr += '</div>'
+                                formStr += '</div><br/><br/>'
+
+                                //$('#container').html(formStr)
+
+                                //console.log("==============Fact Check==============")
+                                //console.log(App.currOrg.subtype, canvasData.stackAssignedBy, App.currOrg.emailid)
+
+                                if (App.currOrg.subtype === "Entrepreneur" && canvasData.submitedBy === App.currOrg.emailid) {
+                                    //SECTION: Share with Resource Provider 
+                                    formStr += `<hr/>
+                                    <h4>Share with a friend(Entrepreneur)</h4>
+                                    <form class="form">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="text" class="form-control" id="entrepreneurId" placeholder="Type entrepreneur emailid">
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-primary" type="submit" onclick="App.SaveToBC_ShareWithEntrepreneur('${canvasId}'); return false;">Share</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr/>`
+                                } else if (App.currOrg.subtype != "Entrepreneur" && canvasData.stackAssignedBy === App.currOrg.emailid && canvasData.feedbackForm.length === 0) {
+
+                                    // LOAD FEEDBACK FORM FOR RESOURCE PROVIDER
+                                    if (data.canvas.canvas[index].feedback.length > 0) {
+
+                                        formStr += '<hr/><form class="needs-validation" novalidate>';
+                                        formStr += `<h3>Resource Provider feedback on canvas.</h3>`
+
+                                        formStr += '<div class="row">'
+                                        formStr += '<div class="col-md-12 order-md-1">'
+
+                                        for (let each in data.canvas.canvas[index].feedback) {
+                                            (function (idx, arr) {
+                                                formStr += App.genFormItem(arr[idx]);
+                                            })(each, data.canvas.canvas[index].feedback)
+                                        }
+
+                                        //POST RESOURCE PROVIDER FEEDBACK
+                                        formStr += `<button class="btn btn-primary btn-lg btn-block" type="submit" onclick="App.SaveToBC_ResourceProviderCanvasFeedback(${index},'${canvasId}'); return false;">Submit Canvas Feedback</button>`;
+
+                                        formStr += '</div>'
+                                        formStr += '</div>'
+                                        //formStr += '</div>';
+                                        formStr += '</form><hr/>';
+
+                                    } else {
+                                        console.log("No feedback form available for this canvas in the canvas datasheet.")
+                                    }
+
+
+                                }
+
+                                console.log(canvasData.feedbackForm, typeof canvasData.feedbackForm)
+                                if (typeof canvasData.feedbackForm === "string") {
+
+                                    let feedbackData = JSON.parse(canvasData.feedbackForm);
+
+                                    console.log(feedbackData, typeof feedbackData, feedbackData.length)
+
+                                    //if(feedbackData.length > 0){
+                                    console.log("Load the feedback from.", canvasData.stackAssignedBy)
+
+                                    formStr += `<hr/><h3>Resource Provider feedback on canvas by ${canvasData.stackAssignedBy}</h3>`
+                                    formStr += '<div class="row">'
+                                    formStr += '<div class="col-md-12 order-md-1">'
+
+                                    for (let each in data.canvas.canvas[index].feedback) {
+                                        (function (idx, arr) {
+                                            //console.log('#',arr[idx]);
+                                            let _label = arr[idx].label;
+                                            let _labelIds = App.returnLabelId(_label);
+                                            arr[idx].value = feedbackData[_labelIds.toLowerCase()];
+                                            arr[idx].disable = true;
+                                            //console.log('###',arr[idx]);
+                                            formStr += App.genFormItem(arr[idx]);
+                                        })(each, data.canvas.canvas[index].feedback)
+                                    }
+
+                                    formStr += '</div>'
+                                    formStr += '</div><br/><hr/><br/>'
+                                    //}else{
+
+                                    // }
+
+                                }
+
+
+
+                                //SECTION: Comment with canvas 
+                                //console.log("Comments on this canvas.")
+                                //console.log(canvasData.comments)
+
+                                formStr += `<h3>Post Your Comments</h3>
+                                <form class="form">
+                                <div class="row"><textarea class="form-control" id="canvasCommentTextArea" rows="3" placeholder="Post your comments." value=""></textarea></div>
+                                <div class="row"><button class="btn btn-primary btn-lg" type="submit" onclick="App.SaveToBC_CommentOnCanvas('${canvasId}'); return false;">Submit your comments</button></div>
+                                </form>
+                                
+                                <hr/>
+                                <h4>Comments</h4><br/>`
+
+                                let canvasComments = canvasData.comments;
+                                if (typeof canvasComments === 'string') {
+                                    canvasComments = JSON.parse(canvasData.comments);
+                                }
+
+
+                                for (let each in canvasComments) {
+                                    (function (idx, arr) {
+                                        console.log(arr[idx])
+                                        formStr += `<div class="alert alert-warning">
+                                        <strong>&quot;${arr[idx].message}&quot;</strong>
+                                        <br/>
+                                        ${arr[idx].createrName}(${arr[idx].createrType})
+                                        <br/>
+                                        ${arr[idx].createdBy}
+                                      </div>`
+                                    })(each, canvasComments)
+                                }
+
+                                $('#container').html(App.loadOrgSideMenu(formStr));
+
+                                App.showloader(false)
+
+                            } else {
+                                let errorString = 'Error on Get Canvas';
+                                App.loadErrorMessage(errorString, 'loadOrgProfilePage');
+                            }
+
+                        } else {
+                            let errorString = 'Unable to get api service calls.';
+                            App.loadErrorMessage(errorString, 'loadOrgProfilePage');
+                        }
+                    });
+
+
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+
+
+
+    },
+    SaveToBC_ResourceProviderCanvasFeedback: function (param, canvasid) {
+
+        console.log("SaveToBC_ResourceProviderCanvasFeedback", param, typeof param, canvasid, typeof canvasid)
+
+        App.showloader(true)
+
+        // Read Canvas JSON for Input Fields.
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+
+                    //console.log(data.canvas.canvas[param].form)
+
+
+                    let payload = {};
+
+                    for (let each in data.canvas.canvas[param].feedback) {
+                        (function (idx, arr) {
+                            //formStr += App.genFormItem(arr[idx]);
+                            //console.log(idx, arr[idx])
+                            let _label = arr[idx].label
+                            let _labelIds = App.returnLabelId(_label);
+                            //console.log(_labelIds)
+                            let isRequired = arr[idx].required;
+                            //console.log(_labelIds);
+                            let value = $('#' + _labelIds.toLowerCase());
+
+
+                            if (value.val() != null && value.val() != undefined) {
+                                //console.log(_label, ':==>', value.val());
+                                payload[_labelIds.toLowerCase()] = value.val();
+                            } else {
+                                switch (arr[idx].type) {
+                                    case 'radio':
+                                        const radioVal = $(`input[name='${_labelIds.toLowerCase()}']:checked`).val();
+                                        //console.log("Radio Corner");
+                                        //console.log(_labelIds.toLowerCase(), radioVal)
+                                        //console.log("Radio", $(`input[name='${_labelIds.toLowerCase()}']:checked`).val())
+                                        //console.log(_label, $("input[name='organizationtype1']:checked").val())
+                                        if (isRequired && radioVal === undefined) {
+                                            let errorString = 'Field ' + _label + ' is Missing. Kindly fill the canvas and submit again.';
+                                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                            return;
+                                        } else {
+                                            payload[_labelIds.toLowerCase()] = radioVal
+                                        }
+
+                                        break;
+                                    case 'checkbox':
+                                        let checkValues = []
+                                        $(`input[name='${_labelIds.toLowerCase()}']:checked`).each(function () {
+                                            //console.log(_label, this.value);
+                                            checkValues.push(this.value)
+                                        });
+                                        payload[_labelIds.toLowerCase()] = checkValues;
+                                        break;
+
+                                    default:
+                                        console.log(arr[idx].type + ":::" + _label + "/" + _labelIds + " value not found. ")
+                                        if (isRequired) {
+                                            let errorString = 'Field ' + _label + ' is Missing. Kindly fill the canvas and submit again.';
+                                            App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                            return;
+                                        }
+                                        break;
+                                }
+                            }
+
+                            if (parseInt(idx) + 1 >= data.canvas.canvas[param].feedback.length) {
+
+                                //console.log("============================== SHOT CANVAS")
+
+                                console.log("==== CANVAS PAYLOAD ====")
+                                const ts = Date.now();
+                                payload['submitedOn'] = ts;
+
+
+                                //console.log(stackCreatedOn, stackAssigneby)
+                                //console.log(payload);
+
+
+                                let postmessage = {
+                                    representativeEmail: App.currOrg.emailid,
+                                    canvasid: canvasid,
+                                    feedbackForm: payload
+                                }
+
+
+                                console.log(postmessage)
+
+                                $.post(App.baseURL + "/blockchain/update-canvas-feedback", postmessage, function (data, status) {
+
+                                    console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+
+                                    App.showloader(false, 'landing');
+
+                                    if (status === 'success') {
+                                        console.log("Status Success")
+                                        if (data.status === true) {
+                                            console.log("Data.Status Success")
+                                            //Data: {"TxnID":"765dae175ca89f431d9d9a9e6f3e2b0a8701b0cda959980e8c1f0ab1887c1223","message":"Canvas saved.","stauts":true}
+
+                                            App.loadSuccessMessage('Comments on this canvas has been posted successfully.. ' + data.message + '. Transaction Id ' + data.TxnID, 'loadOrgProfilePage');
+                                        } else {
+                                            //console.log("Data.Status Error")
+                                            App.loadErrorMessage(data.message, 'loadOrgProfilePage');
+                                        }
+                                    } else {
+                                        //console.log("Status Error")
+                                        App.loadErrorMessage(data.message, 'loadOrgProfilePage');
+                                    }
+                                })
+
+                                $.post(App.baseURL + "/blockchain/get-canvas-by-id", { "canvasId": canvasid }, function (data, status) {
+                                    //console.log("Data: " + data + "\nStatus: " + status);
+
+                                    if (status === 'success') {
+                                        //console.log(data)
+                                        if (data.status) {
+
+                                            let canvasData = data.canvas
+                                            console.log(typeof canvasData.feedbackForm, canvasData.feedbackForm.length);
+
+                                            let feedbackForm = canvasData.feedbackForm;
+                                            if (typeof canvasData.comments == 'string') {
+                                                comment = JSON.parse(canvasData.comments);
+                                            }
+
+                                            //console.log("Length Check on comment::", comment.length)
+                                            if (feedbackForm.length > 0) {
+                                                feedbackForm.push({ message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now() });
+                                            } else {
+                                                feedbackForm = [{ message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now() }];
+                                            }
+
+                                            //comment.push({message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now()});
+
+
+
+                                        } else {
+                                            let errorString = 'Error executing query list.';
+                                            App.loadErrorMessage(errorString);
+                                        }
+                                    } else {
+                                        let errorString = 'Unable to get api service calls.';
+                                        App.loadErrorMessage(errorString);
+                                    }
+
+                                }, "json")
+
+                            }
+                        })(each, data.canvas.canvas[param].feedback)
+                    }
+
+
+
+
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadpages');
+            }
+
+        });
+
+
+
+
+
+
+
+    },
+    SaveToBC_CommentOnCanvas: function (canvasid) {
+        const message = $("#canvasCommentTextArea").val();//canvasCommentTextArea
+
+
+        $.post(App.baseURL + "/blockchain/get-canvas-by-id", { "canvasId": canvasid }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data)
+                if (data.status) {
+
+                    let canvasData = data.canvas
+                    console.log(typeof canvasData.comments, canvasData.comments.length);
+
+                    let comment = canvasData.comments;
+                    if (typeof canvasData.comments == 'string') {
+                        comment = JSON.parse(canvasData.comments);
+                    }
+
+                    //console.log("Length Check on comment::", comment.length)
+                    if (comment.length > 0) {
+                        comment.push({ message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now() });
+                    } else {
+                        comment = [{ message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now() }];
+                    }
+
+                    //comment.push({message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now()});
+
+                    let postmessage = {
+                        representativeEmail: App.currOrg.emailid,
+                        canvasid: canvasid,
+                        comment: comment
+                    }
+
+
+                    console.log(postmessage)
+
+                    $.post(App.baseURL + "/blockchain/update-canvas-comment", postmessage, function (data, status) {
+
+                        console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+
+                        App.showloader(false, 'landing');
+
+                        if (status === 'success') {
+                            console.log("Status Success")
+                            if (data.status === true) {
+                                console.log("Data.Status Success")
+                                //Data: {"TxnID":"765dae175ca89f431d9d9a9e6f3e2b0a8701b0cda959980e8c1f0ab1887c1223","message":"Canvas saved.","stauts":true}
+
+                                App.loadSuccessMessage('Comments on this canvas has been posted successfully.. ' + data.message + '. Transaction Id ' + data.TxnID, 'loadOrgProfilePage');
+                            } else {
+                                //console.log("Data.Status Error")
+                                App.loadErrorMessage(data.message, 'loadOrgProfilePage');
+                            }
+                        } else {
+                            //console.log("Status Error")
+                            App.loadErrorMessage(data.message, 'loadOrgProfilePage');
+                        }
+                    })
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+
+
+
+
+    },
+    SaveToBC_ShareWithEntrepreneur: function (canvasid) {
+        const entrepreneurId = $("#entrepreneurId").val();
+
+        App.showloader(true);
+
+
+        if (entrepreneurId != "" && entrepreneurId != null && entrepreneurId != App.currOrg.emailid) {
+
+            $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": entrepreneurId }, function (data, status) {
+                //console.log("Data: " + data + "\nStatus: " + status);
+
+                if (status === 'success') {
+                    console.log(data)
+                    if (data[0].status) {
+
+                        let org = data[0].organizationDetails
+
+                        console.log("Entrepreneur organization details")
+                        console.log(org)
+
+                        if (org.subtype === "Entrepreneur") {
+                            var orgParam = JSON.parse(org.param);
+
+
+                            console.log("Sharedwith", orgParam.sharedcanvaswithme, typeof orgParam.sharedcanvaswithme);
+                            if (orgParam.sharedcanvaswithme.length > 0) {
+                                for (let i = 0; i < orgParam.sharedcanvaswithme.length; i++) {
+                                    if (orgParam.sharedcanvaswithme[i] == canvasid) {
+                                        App.loadErrorMessage('Canvas has already been shared with this organization.', 'loadOrgMyStakePage');
+                                        return;
+                                    }
+                                }
+                                orgParam.sharedcanvaswithme.push(canvasid);
+                            } else {
+                                orgParam.sharedcanvaswithme.push(canvasid);
+                            }
+
+
+                            $.post(App.baseURL + "/blockchain/update-param", { "emailid": entrepreneurId, "param": JSON.stringify(orgParam) }, function (data, status) {
+                                //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                                if (status === 'success') {
+                                    //console.log(data[0].organizationDetails)
+                                    if (data.status === true) {
+
+
+                                        $.post(App.baseURL + "/blockchain/get-canvas-by-id", { "canvasId": canvasid }, function (data, status) {
+                                            //console.log("Data: " + data + "\nStatus: " + status);
+
+                                            if (status === 'success') {
+                                                //console.log(data)
+                                                if (data.status) {
+
+                                                    let canvasData = data.canvas
+                                                    //console.log(typeof canvasData.comments, canvasData.comments.length);
+
+                                                    let sharedwith = canvasData.sharedwith;
+                                                    console.log("Sharedwith", sharedwith, typeof sharedwith);
+                                                    if (sharedwith.length > 0) {
+                                                        sharedwith.push(entrepreneurId);
+                                                    } else {
+                                                        sharedwith = entrepreneurId;
+                                                    }
+
+                                                    //comment.push({message: message, createdBy: App.currOrg.emailid, createrName: App.currOrg.fullname, createrType: App.currOrg.subtype, createdOn: Date.now()});
+
+                                                    let postmessage = {
+                                                        representativeEmail: App.currOrg.emailid,
+                                                        canvasid: canvasid,
+                                                        sharedwith: sharedwith
+                                                    }
+
+
+                                                    console.log("Postmessage", postmessage)
+
+                                                    $.post(App.baseURL + "/blockchain/update-canvas-sharedwith", postmessage, function (data, status) {
+
+                                                        //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+
+                                                        App.showloader(false);
+
+                                                        if (status === 'success') {
+                                                            //console.log("Status Success")
+                                                            if (data.status === true) {
+                                                                //console.log("Data.Status Success")
+                                                                //Data: {"TxnID":"765dae175ca89f431d9d9a9e6f3e2b0a8701b0cda959980e8c1f0ab1887c1223","message":"Canvas saved.","stauts":true}
+
+                                                                App.loadSuccessMessage('Canvas has been shared successfully. Transaction Id ' + data.TxnID, 'loadOrgMyStakePage');
+                                                            } else {
+                                                                //console.log("Data.Status Error")
+                                                                App.loadErrorMessage(data.message, 'loadOrgMyStakePage');
+                                                            }
+                                                        } else {
+                                                            //console.log("Status Error")
+                                                            App.loadErrorMessage(data.message, 'loadOrgMyStakePage');
+                                                        }
+                                                    })
+
+                                                } else {
+                                                    let errorString = 'Error executing query list.';
+                                                    App.loadErrorMessage(errorString);
+                                                }
+                                            } else {
+                                                let errorString = 'Unable to get api service calls.';
+                                                App.loadErrorMessage(errorString);
+                                            }
+
+                                        }, "json")
+
+
+                                    } else {
+                                        App.loadErrorMessage(data.message, 'loadOrgMyStakePage');
+                                    }
+                                } else {
+                                    let errorString = 'Unable to get api service calls.';
+                                    App.loadErrorMessage(errorString, 'loadOrgMyStakePage');
+                                }
+                            }, "json")
+
+                        } else {
+                            App.loadErrorMessage('Following organization is not an Entrepreneur.', 'loadOrgProfilePage');
+
+                        }
+
+                        /*
+                        // param.stack.push(JSON.stringify({ name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0 }));
+                        
+                        console.log("New Param to update.", orgParam)
+
+
+                        */
+
+                    } else {
+                        let errorString = 'Error: ' + data[0].message;
+                        App.loadErrorMessage(errorString, 'loadOrgProfilePage');
+                    }
+                } else {
+                    let errorString = 'Unable to get api service calls.';
+                    App.loadErrorMessage(errorString, 'loadOrgProfilePage');
+                }
+
+            }, "json")
+
+        } else {
+            App.loadErrorMessage('Enterpreneur email id can not be empty.', 'loadOrgProfilePage');
+        }
+
+    },
+    updateStackData: function (createdAsId, updateStatus, emailid) {
+
+        console.log("updateStackData", createdAsId, updateStatus, emailid);
+
+        $('#container').empty();
+        App.showloader(true)
+
+        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": emailid }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+                    App.showloader(false)
+
+                    let org = data[0].organizationDetails
+
+                    console.log("Entrepreneur organization details")
+                    console.log(org)
+
+                    var param = JSON.parse(org.param);
+                    //console.log("Old Param:", param)
+                    let stack = [];
+                    for (let each in param.stack) {
+                        (function (idx, arr) {
+                            // List of assigned Resource Providers
+                            var stackData = JSON.parse(arr[idx]);
+
+                            if (stackData.createdOn === createdAsId) {
+                                stackData.status = updateStatus;
+                            }
+
+                            stack.push(JSON.stringify(stackData));
+
+                        })(each, param.stack)
+                    }
+
+
+                    param.stack = stack;
+                    console.log("New Param to update.", param)
+
+
+                    $.post(App.baseURL + "/blockchain/update-param", { "emailid": emailid, "param": JSON.stringify(param) }, function (data, status) {
+                        //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                        if (status === 'success') {
+                            //console.log(data[0].organizationDetails)
+                            if (data.status === true) {
+                                App.showloader(false);
+                                App.loadSuccessMessage('Stack status updated successfully.', 'loadOrgProfilePage');
+                            } else {
+                                App.loadErrorMessage(data.message, 'loadOrgProfilePage');
+                            }
+                        } else {
+                            let errorString = 'Unable to get api service calls.';
+                            App.loadErrorMessage(errorString, 'loadOrgProfilePage');
+                        }
+                    }, "json")
+
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+
+    },
+    loadOrgAssignCanvasPage: function () {
+
+        $.get(App.baseURL + "/blockchain/get-canvas", function (data, status) {
+
+            $('#container').empty();
+
+            //console.log("Data: " + JSON.stringify(data));
+
+            if (status === 'success') {
+
+                if (data.success) {
+
+                    let bodyStr = `<h3>Assign Stack</h3>`
+
+                    bodyStr += `<form class="needs-validation" novalidate><div class="row">
+                        <div class="col">
+                            <select class="form-control" id="assign-stack-entrepreneur">
+                                <option selected disabled>Select entrepreneur</option>`
+
+                    let param = JSON.parse(App.currOrg.param)
+                    for (let each in param.match) {
+                        (function (__idx, __arr) {
+                            // List of assigned Entrepreneur
+                            bodyStr += `<option value="${__arr[__idx]}">${__arr[__idx]}</option>`
+                        })(each, param.match)
+                    }
+                    bodyStr += `</select>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" id="assign-stack-name">
+                                <option selected disabled>Select a Stack</option>`
+
+                    for (let i = 0; i < data.canvas.stack.length; i++) {
+                        bodyStr += `<option value="${data.canvas.stack[i].name}">${data.canvas.stack[i].name}</option>`;
+                    }
+                    /*for (let each in resourceproviders) {
+                        (function (__idx, __arr) {
+                            // List of assigned Resource Providers
+                            bodyStr += `<option value="${__arr[__idx]}">${__arr[__idx]}</option>`
+                        })(each, resourceproviders)
+                    }*/
+                    bodyStr += `</select>
+                        </div>
+                        <div class="col">`
+                    bodyStr += `<button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.saveOrgAssignCanvas(); return false;">Assign Stack</button>`
+                    bodyStr += `</div></div></form><br/><hr/>`
+
+                    // Second Half of the page
+                    // List the assigned Entrepreneur
+                    bodyStr += `<h3>List of Entrepreneur assigned. </h3>
+                        <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Entrepreneur Name</th>
+                            <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            `
+
+                    for (let each in param.match) {
+                        (function (__idx, __arr) {
+                            bodyStr += `<tr><th scope="row">${parseInt(__idx) + 1}</th>
+                            <td>${__arr[__idx]}</td>
+                            <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.loadOrgEntrepreneurDetailPage('${__arr[__idx]}'); return false;">View Stack status</button></td></tr>`
+                        })(each, param.match)
+                    }
+                    bodyStr += `
+                        </tbody>
+                        </table>`
+
+
+                    $('#container').html(App.loadOrgSideMenu(bodyStr));
+
+                } else {
+                    let errorString = 'Error on Get Canvas';
+                    App.loadErrorMessage(errorString, 'loadOrgAssignCanvasPage');
+                }
+
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString, 'loadOrgAssignCanvasPage');
+            }
+
+        });
+    },
+    saveOrgAssignCanvas: function () {
+        let assignStackEntrepreneur = $('#assign-stack-entrepreneur').find(':selected').val();
+        let assignStackName = $('#assign-stack-name').find(':selected').val();
+
+        if (assignStackEntrepreneur != "Select entrepreneur" && assignStackName != "Select a Stack") {
+            console.log("Selected Entrepreneur", assignStackEntrepreneur, " for stack: ", assignStackName)
+
+            App.showloader(true)
+
+            $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": assignStackEntrepreneur }, function (data, status) {
+                //console.log("Data: " + data + "\nStatus: " + status);
+
+                if (status === 'success') {
+                    //console.log(data[0].organizationDetails)
+                    if (data[0].message === 'Query Successful') {
+
+                        let org = data[0].organizationDetails
+
+                        console.log("Entrepreneur organization details")
+                        console.log(org)
+
+                        var param = JSON.parse(org.param);
+
+                        let isExist = false;
+                        let hasStackCompleted = false;
+
+                        console.log("Checking the previousely saved stack data for this organization.")
+                        for (let each in param.stack) {
+                            (function (idx, arr) {
+                                // List of assigned Resource Providers
+                                var stackData = JSON.parse(arr[idx]);
+                                console.log(stackData.name, typeof stackData, stackData)
+                                if (assignStackName === stackData.name) {
+                                    isExist = true;
+                                    if (stackData.status === App.STACK_STATUS[4]) {
+                                        isExist = false;
+                                        hasStackCompleted = true;
+                                    } else {
+
+                                    }
+                                }
+                            })(each, param.stack)
+                        }
+
+                        if (isExist) {
+                            App.loadErrorMessage('Stack ' + assignStackName + ' has already been assigned to this organization.', 'loadOrgAssignCanvasPage')
+                        } else if (hasStackCompleted) {
+                            App.loadErrorMessage('Stack ' + assignStackName + ' has already been completed and approved. Please select the next stack for this organization.', 'loadOrgAssignCanvasPage')
+                        } else {
+
+                            param.stack.push(JSON.stringify({ name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0 }));
+
+                            $.post(App.baseURL + "/blockchain/update-param", { "emailid": assignStackEntrepreneur, "param": JSON.stringify(param) }, function (data, status) {
+                                //console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                                if (status === 'success') {
+                                    //console.log(data[0].organizationDetails)
+                                    if (data.status === true) {
+                                        App.showloader(false);
+                                        App.loadSuccessMessage('Stack ' + assignStackName + ' has been successfully assigned to ' + assignStackEntrepreneur, 'loadOrgAssignCanvasPage');
+                                    } else {
+                                        App.loadErrorMessage(data.message, 'loadOrgAssignCanvasPage');
+                                    }
+                                } else {
+                                    let errorString = 'Unable to get api service calls.';
+                                    App.loadErrorMessage(errorString, 'loadOrgAssignCanvasPage');
+                                }
+                            }, "json")
+
+                        }
+
+                    } else {
+                        let errorString = 'Error executing query list.';
+                        App.loadErrorMessage(errorString);
+                    }
+                } else {
+                    let errorString = 'Unable to get api service calls.';
+                    App.loadErrorMessage(errorString);
+                }
+
+            }, "json")
+        } else {
+            App.loadErrorMessage('Please select a valid Entrepreneur & Stack', 'loadOrgAssignCanvasPage')
+        }
+    },
+    loadOrgEntrepreneurDetailPage: function (param) {
+        $('#container').empty();
+        App.showloader(true)
+
+        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": param }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+                    App.showloader(false)
+
+                    let org = data[0].organizationDetails
+
+                    console.log("Entrepreneur organization details")
+                    console.log(org)
+
+                    let bodyStr = `<h3>Assigned Stack - ${org.emailid}</h3>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Assigned By</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>`
+
+                    var param = JSON.parse(org.param);
+
+                    for (let each in param.stack) {
+                        (function (idx, arr) {
+                            // List of assigned Resource Providers
+                            var stackData = JSON.parse(arr[idx]);
+                            // name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0
+
+                            let time = Date.now(stackData.createdOn);
+
+                            bodyStr += `<tr>
+                                <th scope="row">${parseInt(idx) + 1}</th>
+                                <td>${new Date(time).toISOString()}</td>
+                                <td>${stackData.name}</td>
+                                <td>${stackData.status}</td>
+                                <td>${stackData.assignedBy === App.currOrg.emailid ? 'ME' : stackData.assignedBy}</td>
+                                <td>`
+                            if (stackData.status === App.STACK_STATUS[3]) {
+                                bodyStr += `<button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.updateStackData(${stackData.createdOn},'${App.STACK_STATUS[4]}','${org.emailid}'); return false;">Approve</button>`
+                            }
+                            bodyStr += `</td>
+                            </tr>`
+                        })(each, param.stack)
+                    }
+
+                    bodyStr += `</tbody></table><hr/>`
+
+
+                    bodyStr += `<h3>Canvas Submited - ${org.emailid}</h3>
+                    <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Canvas Id</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>`
+
+                    for (let each in param.canvas) {
+                        (function (idx, arr) {
+                            // List of assigned Resource Providers
+                            var canvasData = JSON.parse(arr[idx]);
+                            // name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0
+
+                            console.log(typeof canvasData, canvasData)
+
+                            bodyStr += `<tr>
+                                    <th scope="row">${parseInt(idx) + 1}</th>
+                                    <td>${canvasData.canvasId}</td>
+                                    <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.loadOrgCompletedCanvasPage('${canvasData.canvasId}'); return false;">View Canvas</button></td>
+                                </tr>`
+
+                        })(each, param.canvas)
+                    }
+
+                    bodyStr += `</tbody>
+                  </table>`
+
+                    $('#container').html(App.loadOrgSideMenu(bodyStr));
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+    },
+    loadOrgCanvasSharedWithMePage: function () {
+        $('#container').empty();
+        App.showloader(true)
+
+        $.post(App.baseURL + "/blockchain/get-org-sepcific-details", { "representativeEmail": App.currOrg.emailid }, function (data, status) {
+            //console.log("Data: " + data + "\nStatus: " + status);
+
+            if (status === 'success') {
+                //console.log(data[0].organizationDetails)
+                if (data[0].message === 'Query Successful') {
+
+                    App.showloader(false)
+
+                    let org = data[0].organizationDetails
+
+                    var param = JSON.parse(org.param);
+
+                    console.log("Entrepreneur organization details")
+                    console.log(org)
+
+                    let bodyStr = '';
+
+
+                    bodyStr += `<h3>Canvas shared with me</h3>
+                    <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Canvas Id</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>`
+
+                    for (let each in param.sharedcanvaswithme) {
+                        (function (idx, arr) {
+                            // List of assigned Resource Providers
+                            console.log("--", typeof arr[idx], arr[idx])
+                            var canvasId = arr[idx];
+                            // name: assignStackName, status: App.STACK_STATUS[0], assignedBy: App.currOrg.emailid, createdOn: Date.now(), completedOn: 0
+
+                            console.log(typeof canvasId, canvasId)
+
+                            bodyStr += `<tr>
+                                    <th scope="row">${parseInt(idx) + 1}</th>
+                                    <td>${canvasId}</td>
+                                    <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.loadOrgCompletedCanvasPage('${canvasId}'); return false;">View Canvas</button></td>
+                                </tr>`
+
+                        })(each, param.sharedcanvaswithme)
+                    }
+
+                    bodyStr += `</tbody>
+                  </table>`
+
+                    $('#container').html(App.loadOrgSideMenu(bodyStr));
+
+                } else {
+                    let errorString = 'Error executing query list.';
+                    App.loadErrorMessage(errorString);
+                }
+            } else {
+                let errorString = 'Unable to get api service calls.';
+                App.loadErrorMessage(errorString);
+            }
+
+        }, "json")
+    },
+
+    /**
+     *  MISLENOUS 
+     */
+
+
+    loadSuccessMessage: function (param, func, _cont = 'main') {
+        App.showloader(false, _cont)
+        switch (_cont) {
+            case 'main':
+                $('#container').empty();
+                $('#container').html('<div class="row"><div class="alert alert-success"><strong>Success!</strong> ' + param + '</div></div><div class="row"><div class="btn-group btn-group-justified"><button onclick="App.' + func + '();" class="btn btn-primary">Ok</button></div></div>');
+                break;
+            case 'landing':
+                $('#org-landing-container').empty();
+                $('#org-landing-container').html('<div class="row"><div class="alert alert-success"><strong>Success!</strong> ' + param + '</div></div><div class="row"><div class="btn-group btn-group-justified"><button onclick="App.' + func + '();" class="btn btn-primary">Ok</button></div></div>');
+                break;
+            default:
+
+                break;
+        }
+
+    },
+    loadErrorMessage: function (param, func, cont = 'main') {
+        App.showloader(false, cont)
+        switch (cont) {
+            case 'main':
+                $('#container').empty();
+                $('#container').html('<div class="row"><div class="alert alert-danger"><strong>Error!</strong> ' + param + '</div></div><div class="row"><button onclick="App.' + func + '();" class="btn btn-primary">Ok</button></div>');
+                break;
+            case 'landing':
+                $('#org-landing-container').empty();
+                $('#org-landing-container').html('<div class="row"><div class="alert alert-danger"><strong>Error!</strong> ' + param + '</div></div><div class="row"><button onclick="App.' + func + '();" class="btn btn-primary">Ok</button></div>');
+                break;
+            default:
+
+                break;
+        }
+
+
+    },
+    showloader: function (param, cont = 'main') {
+        switch (cont) {
+            case 'main':
+                if (param === true) {
+                    $('#container').hide();
+                    $('#loader').show();
+                } else {
+                    $('#container').show();
+                    $('#loader').hide();
+                }
+                break;
+            case 'landing':
+                if (param === true) {
+                    $('#org-landing-container').empty();
+                    $('#org-landing-container').html('<div class="container"><h1 class="mt-5">Loading...</h1></div>');
+                } else {
+                    $('#org-landing-container').empty();
+                }
+                break;
+            default:
+                $('#container').show();
+                $('#loader').hide();
+                break;
+        }
+
+    },
+    showUploadModal: function(container){
+        $('#exampleModal').modal('show'); // show , toggle
+        $(".modal-body #userPhoto").val('');
+        $(".modal-body #status").empty();
+        $(".modal-body #fileName").val('');
+        $(".modal-body #containerId").val(container);
+    },
+    hideUploadModal: function(){
+        
+        let fileName = $(".modal-body #fileName").val();
+        let containerId = $(".modal-body #containerId").val();
+
+        console.log("Value Written to Model:::::::::ContainerID", containerId)
+        console.log("Value Written to Model:::::::::FileName", fileName)
+
+        $(`#${containerId}`).val(fileName);
+        
+        $('#exampleModal').modal('hide');
+    },
+    returnLabelId: function(param){
+        return param.replace(/\s/g, '').replace(/\//g, '').replace(/\?/g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\-/g, '').replace(/\:/g, '').replace(/\./g, '').replace(/\&/g, '').replace(/\$/g, '');
+    },
+    /**
+     * FORM AUTOMATION
+     */
+
+    genFormItem: function (param) {
+        //console.log(param)
+        let _label = param.label
+        let _labelIds = App.returnLabelId(_label);
+        let _placeholder = param.placeholder;
+        let _value = param.value;
+        let _disable = param.disable;
+        //console.log('Label', _label);
+        //console.log('Label ID', _labelIds.toLowerCase())
+        let str = '<div class="form-group row">';
+        if(param.type === "label"){
+            str += `<h3>${_label}</h3>`
+        }else{
+            str += `<label for="${_labelIds.toLowerCase()}" class="col-sm-2 col-form-label">${_label}</label>`;
+        }
+        
+        switch (param.type) {
+            case "input":
+                str += `<div class="col-sm-10">`;
+                str += `<input type="text" class="form-control" id="${_labelIds.toLowerCase()}" placeholder="${_placeholder}" value="${_value}"`
+                if (_disable) {
+                    str += ` disabled>`
+                } else {
+                    str += `>`
+                }
+                str += `</div>`
+                break;
+
+            case "select":
+                str += `<div class="col-sm-10">`;
+                str += `<select class="form-control" id="${_labelIds.toLowerCase()}"`;
+                if (_disable) {
+                    str += ` disabled>`
+                } else {
+                    str += `>`
+                }
+                if (_placeholder != '' && _value == '') str += `<option value="" disabled selected>${_placeholder}</option>`;
+                for (let each in param.option) {
+                    (function (idx, arr) {
+                        let __label = arr[idx];
+                        //let __labelIds = __label.replace(/\s/g, '').replace(/\//g,'').replace(/\?/g,'').replace(/\(/g,'').replace(/\)/g,'').replace(/\-/g,'')
+                        if (_value === __label) {
+                            str += `<option value="${__label}" selected>${__label}</option>`;
+                        } else {
+                            str += `<option value="${__label}">${__label}</option>`;
+                        }
+
+                    })(each, param.option)
+                }
+                str += `</select></div>`;
+                break;
+
+            case "textarea":
+                str += `<div class="col-sm-10">`;
+                str += `<textarea class="form-control" id="${_labelIds.toLowerCase()}" rows="3" placeholder="${_placeholder}" value="${_value}"`
+                if (_disable) {
+                    str += ` disabled>`
+                } else {
+                    str += `>`
+                }
+                str += `${_value}</textarea>`;
+                str += `</div>`;
+                break;
+
+            case "radio":
+                str += `<div class="col-sm-10">`
+                for (let each in param.option) {
+                    (function (idx, arr) {
+                        let __label = arr[idx];
+                        let __labelIds = App.returnLabelId(__label);
+                        str += `<div class="form-check">`
+                        //console.log("======= RADIO BUTTON VIEW =======")
+                        //console.log("_value",_value.replace(/\s/g, '').toLowerCase());
+                        //console.log("__labelIds.toLowerCase()",__labelIds.toLowerCase());
+                        if (_value.replace(/\s/g, '').toLowerCase() === __labelIds.toLowerCase()) {
+                            str += `<input class="form-check-input" type="radio" name="${_labelIds.toLowerCase()}" id="${__labelIds.toLowerCase()}" value="${__label}" checked`
+                        } else {
+                            str += `<input class="form-check-input" type="radio" name="${_labelIds.toLowerCase()}" id="${__labelIds.toLowerCase()}" value="${__label}"`
+                        }
+
+                        if (_disable) {
+                            str += ` disabled>`
+                        } else {
+                            str += `>`
+                        }
+
+                        str += `<label class="form-check-label" for="${__labelIds.toLowerCase()}">`
+                        str += `${__label}`
+                        str += `</label>`
+                        str += `</div>`
+                    })(each, param.option)
+                }
+                str += `</div>`
+                break;
+
+            case "checkbox":
+                str += `<div class="col-sm-10">`;
+                for (let each in param.option) {
+                    (function (idx, arr) {
+                        let __label = arr[idx];
+                        let __labelIds = App.returnLabelId(__label);
+                        str += `<div class="form-check">`
+                        let isChecked = false;
+                        if (typeof _value === 'object') {
+                            _value.forEach((el) => {
+                                if (App.returnLabelId(el).toLowerCase() === __labelIds.toLowerCase()) {
+                                    isChecked = true;
+                                }
+                                //console.log(el, __label)
+                            })
+                        }
+
+                        //console.log(_disable, typeof _disable)
+                        //console.log('_disable', _disable)
+
+                        if (isChecked) {
+                            str += `<input class="form-check-input" type="checkbox" name="${_labelIds.toLowerCase()}" value="${__label}" id="${__labelIds.toLowerCase()}" checked`
+                        } else {
+                            str += `<input class="form-check-input" type="checkbox" name="${_labelIds.toLowerCase()}" value="${__label}" id="${__labelIds.toLowerCase()}"`
+                        }
+
+                        if (_disable) {
+                            str += ` disabled>`
+                        } else {
+                            str += `>`
+                        }
+
+                        str += `<label class="form-check-label" for="${__labelIds.toLowerCase()}">`
+                        str += `${__label}`
+                        str += `</label>`
+                        str += `</div>`
+                    })(each, param.option)
+                }
+                str += `</div>`;
+                break;
+
+            case "datetime":
+
+                str += `<div class="col-sm-10">
+                            <input class="form-control" type="datetime-local" value="${_value}" id="${_labelIds.toLowerCase()}"`
+                if (_disable) {
+                    str += ` disabled>`
+                } else {
+                    str += `>`
+                }
+                str += `</div>`
+
+                break;
+
+            case "label":
+                //str += `<div class="col-sm-10">`;
+                //str += `</div>`
+                break;
+
+            case "file":
+                if(_value != ''){
+                    str += `<div class="col-sm-10">
+                                <a href="http://${window.location.hostname}:3000/${_value}" target="_blank">${_value}</a>
+                            </div>`
+                }else{
+                    str += `<div class="col-sm-10">
+                                <div class="form-group row">
+                                    <button type="submit" class="btn btn-light mb-2" onclick="App.showUploadModal('${_labelIds.toLowerCase()}'); return false;">Choose A
+                                        File</button>
+                                    <div class="col-sm-10">
+                                        <input type="text" readonly class="form-control-plaintext" id="${_labelIds.toLowerCase()}" value="">
+                                    </div>
+                                </div>
+                            </div>`
+                }
+                
+                break;
+
+            default:
+                break;
+        }
+        str += '</div>'
+        //< div class="form-group row" >
+        //<label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+        //<div class="col-sm-10">
+        //<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com">
+        //</div>
+        //</div>
+        return str;
+    }
+}
+
+$(function () {
+    $(window).load(function () {
+        App.init();
+
+        $(document).on("click", ".open-exampleModal", function(){
+            
+        });
+    })
+})
