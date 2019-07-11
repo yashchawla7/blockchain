@@ -15,7 +15,7 @@
     "idx_preload":"事前ロードネットワーク"
     },
     "admin": {
-    "title":"Intellectual property registration blockchain 弟05章",
+    "title":"Zero To Blockchain 弟05章",
     "npm":"ネットワークプロファイル管理",
     "npm_API":"API",
     "npm_param":"パラメーター",
@@ -120,7 +120,7 @@
     "submit":"提出"
     },
     "financeCo": {
-    "title":"Intellectual property registration blockchain弟10章: グローバル・ファイナンシャー",
+    "title":"Zero To Blockchain弟10章: グローバル・ファイナンシャー",
     "financeCOclear":"ウィンドウのクリア",
     "financeCOorderStatus":"発注状況の表示"
     },

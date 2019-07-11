@@ -34,7 +34,7 @@ var locations = require('./text/text-locations.json');
  * "Japanese":   {"active": "no", "menu": "Japanese", "model": "ja-JP_BroadbandModel", "voice": "ja-JP_EmiVoice", "data": "/text/jp/prompts.json"},
  * "Brazilian_Portuguese": {"active": "no", "menu": "Português do Brasi", "model": "pt-BR_BroadbandModel", "voice": "pt-BR_IsabelaVoice", "data": "/text/pt/prompts.json"}
  * } 
- * model and voice are not use in the Intellectual property registration blockchain series unless you want to use Watson Speech to Text or Text to Speech services. 
+ * model and voice are not use in the Zero To Blockchain series unless you want to use Watson Speech to Text or Text to Speech services. 
  * @param {express.req} req - the inbound request object from the client
  * @param {express.res} res - the outbound response object for communicating back to client
  * @param {express.next} next - an express service to enable post processing prior to responding to the client

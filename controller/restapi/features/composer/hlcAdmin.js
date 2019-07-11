@@ -23,7 +23,7 @@ const AdminConnection = require('composer-admin').AdminConnection;
 const BusinessNetworkDefinition = require('composer-common').BusinessNetworkDefinition;
 const BusinessNetworkConnection = require('composer-client').BusinessNetworkConnection;
 const config = require('../../../env.json');
-const NS = 'org.acme.IPRTestNetwork';
+const NS = 'org.acme.Z2BTestNetwork';
 // const svc = require('./Z2B_Services');
 // const mod = 'hlcAdmin.js';
 

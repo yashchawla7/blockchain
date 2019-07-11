@@ -19,7 +19,8 @@ let express = require('express');
 let router = express.Router();
 let format = require('date-format');
 
-let multi_lingual = require('./features/multi_lingual');
+let hlcMain = require('./features/composer/hlcMain');
+/*let multi_lingual = require('./features/multi_lingual');
 let resources = require('./features/resources');
 let getCreds = require('./features/getCredentials');
 let hlcAdmin = require('./features/composer/hlcAdmin');
@@ -33,7 +34,7 @@ router.get('/fabric/getChainEvents', hlcFabric.getChainEvents);
 router.get('/fabric/getHistory', hlcAdmin.getHistory);
 
 router.post('/setup/autoLoad*', setup.autoLoad);
-router.get('/composer/client/initEventRegistry*', hlcClient.init_z2bEvents);
+router.get('/composer/client/initEventRegistry*', hlcClient.init_z2bEvents);*/
 
 module.exports = router;
 let count = 0;
@@ -52,6 +53,10 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
+
+router.get('/composer/admin/addUser*', hlcMain.addUser);
+router.get('/composer/admin/getAllUser*', hlcMain.getAllUser);
+
 // the following get and post statements tell nodeJS what to do when a request comes in
 // The request is the single quoted phrase following the get( or post( statement. 
 // the text at the end identifies which function in which require(d) module to implement
@@ -59,7 +64,7 @@ router.use(function(req, res, next) {
 // The asterisk (*) means 'ignore anything following this point'
 // which means we have to be careful about ordering these statements. 
 //
-router.get('/api/getSupportedLanguages*',multi_lingual.languages);
+/*router.get('/api/getSupportedLanguages*',multi_lingual.languages);
 router.get('/api/getTextLocations*',multi_lingual.locations);
 router.post('/api/selectedPrompts*',multi_lingual.prompts);
 
@@ -91,5 +96,5 @@ router.post('/composer/admin/removeMember*', hlcAdmin.removeMember);
 router.post('/composer/admin/getSecret*', setup.getMemberSecret);
 router.post('/composer/admin/checkCard*', hlcAdmin.checkCard);
 router.post('/composer/admin/createCard*', hlcAdmin.createCard);
-router.post('/composer/admin/issueIdentity*', hlcAdmin.issueIdentity);
+router.post('/composer/admin/issueIdentity*', hlcAdmin.issueIdentity);*/
 
