@@ -1,11 +1,9 @@
 /**
  * Zero To Blockchain multi-party finance network
  */
-namespace org.acme.IPRTestNetwork
-
-abstract participant Member {
-  o String companyName
-}
+namespace org.acme.Z2BTestNetwork
+import composer.base.*
+import composer.events.*
 
 participant Buyer identified by buyerID extends Member{
     o String buyerID

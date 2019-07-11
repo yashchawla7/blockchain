@@ -37,7 +37,7 @@ function printHelp ()
     echo ""
     echo -e "${RESET} options for this exec are: "
     echo -e "${GREEN}-h ${RESET}Print this help information" | indent
-    echo -e "${GREEN}-n ${RESET}defaults to ${GREEN}intellectual-property-network${RESET}. use ${YELLOW}-n your-named-network ${RESET}if you are using a different network name"  | indent
+    echo -e "${GREEN}-n ${RESET}defaults to ${GREEN}zerotoblockchain-network${RESET}. use ${YELLOW}-n your-named-network ${RESET}if you are using a different network name"  | indent
     echo -e "\t\tyou will have to ensure that the name you use here is also the name you use in BOTH package.json files and in your application code" | indent
     echo ""
     echo ""
@@ -47,14 +47,14 @@ function printHelp ()
 function printHeader ()
 {
     echo ""
-    echo -e "${YELLOW}network deploy script for the Intellectual property registration blockchain Series" | indent
+    echo -e "${YELLOW}network deploy script for the Zero To Blockchain Series" | indent
     echo -e "${RED}This has been successfully tested on OSX Sierra and Ubuntu 16.04" | indent
     echo -e "${YELLOW}This script will create your Composer archive" | indent
     echo ""
 }
 # get the command line options
 
-NETWORK_NAME="intellectual-property-network"
+NETWORK_NAME="zerotoblockchain-network"
 
  while getopts "h:n:" opt; 
 do
@@ -93,16 +93,12 @@ showStep "deploying network"
 # documentation for v0.15
 #
 cd network/dist
-showStep "$PWD"
-#showStep "installing PeerAdmin card"
-#composer runtime install --card PeerAdmin@hlfv1 --businessNetworkName $NETWORK_NAME
-
+showStep "installing PeerAdmin card"
+composer runtime install --card PeerAdmin@hlfv1 --businessNetworkName $NETWORK_NAME
+showStep "starting network"
 # change in documentation
 # composer network start --card PeerAdmin@hlfv1 --networkAdmin admin --networkAdminEnrollSecret adminpw --archiveFile $NETWORK_NAME.bna --file networkadmin.card
 # corrected to: 
-showStep "installing network"
-composer network install --archiveFile $NETWORK_NAME.bna -c PeerAdmin@hlfv1
-showStep "starting network"
 composer network start -c PeerAdmin@hlfv1 -A admin -S adminpw -a $NETWORK_NAME.bna --file networkadmin.card
 showStep "importing networkadmin card"
 if composer card list -n admin@$NETWORK_NAME > /dev/null; then

@@ -32,7 +32,7 @@ var orderStatus = {
 
 /**
  * create an order to purchase
- * @param {org.acme.IPRTestNetwork.CreateOrder} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.CreateOrder} purchase - the order to be processed
  * @transaction
  */
 function CreateOrder(purchase) {
@@ -45,7 +45,7 @@ function CreateOrder(purchase) {
 }
 /**
  * Record a request to purchase
- * @param {org.acme.IPRTestNetwork.Buy} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Buy} purchase - the order to be processed
  * @transaction
  */
 function Buy(purchase) {
@@ -60,7 +60,7 @@ function Buy(purchase) {
 }
 /**
  * Record a request to cancel an order
- * @param {org.acme.IPRTestNetwork.OrderCancel} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.OrderCancel} purchase - the order to be processed
  * @transaction
  */
 function OrderCancel(purchase) {
@@ -75,7 +75,7 @@ function OrderCancel(purchase) {
 }
 /**
  * Record a request to order by seller from supplier
- * @param {org.acme.IPRTestNetwork.OrderFromSupplier} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.OrderFromSupplier} purchase - the order to be processed
  * @transaction
  */
 function OrderFromSupplier(purchase) {
@@ -89,7 +89,7 @@ function OrderFromSupplier(purchase) {
 }
 /**
  * Record a request to ship by supplier to shipper
- * @param {org.acme.IPRTestNetwork.RequestShipping} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.RequestShipping} purchase - the order to be processed
  * @transaction
  */
 function RequestShipping(purchase) {
@@ -103,7 +103,7 @@ function RequestShipping(purchase) {
 }
 /**
  * Record a delivery by shipper
- * @param {org.acme.IPRTestNetwork.Delivering} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Delivering} purchase - the order to be processed
  * @transaction
  */
 function Delivering(purchase) {
@@ -119,7 +119,7 @@ function Delivering(purchase) {
 }
 /**
  * Record a delivery by shipper
- * @param {org.acme.IPRTestNetwork.Deliver} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Deliver} purchase - the order to be processed
  * @transaction
  */
 function Deliver(purchase) {
@@ -132,7 +132,7 @@ function Deliver(purchase) {
 }
  /**
  * Record a request for payment by the seller
- * @param {org.acme.IPRTestNetwork.RequestPayment} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.RequestPayment} purchase - the order to be processed
  * @transaction
  */
 function RequestPayment(purchase) {
@@ -146,7 +146,7 @@ function RequestPayment(purchase) {
 }
  /**
  * Record a payment to the seller
- * @param {org.acme.IPRTestNetwork.AuthorizePayment} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.AuthorizePayment} purchase - the order to be processed
  * @transaction
  */
 function AuthorizePayment(purchase) {
@@ -159,7 +159,7 @@ function AuthorizePayment(purchase) {
 }
  /**
  * Record a payment to the seller
- * @param {org.acme.IPRTestNetwork.Pay} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Pay} purchase - the order to be processed
  * @transaction
  */
 function Pay(purchase) {
@@ -172,7 +172,7 @@ function Pay(purchase) {
 }
  /**
  * Record a dispute by the buyer
- * @param {org.acme.IPRTestNetwork.Dispute} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Dispute} purchase - the order to be processed
  * @transaction
  */
 function Dispute(purchase) {
@@ -183,7 +183,7 @@ function Dispute(purchase) {
 }
  /**
  * Resolve a seller initiated dispute
- * @param {org.acme.IPRTestNetwork.Resolve} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Resolve} purchase - the order to be processed
  * @transaction
  */
 function Resolve(purchase) {
@@ -194,7 +194,7 @@ function Resolve(purchase) {
     }
     /**
  * Record a refund to the buyer
- * @param {org.acme.IPRTestNetwork.Refund} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.Refund} purchase - the order to be processed
  * @transaction
  */
 function Refund(purchase) {
@@ -204,7 +204,7 @@ function Refund(purchase) {
     }
     /**
  * Record a backorder by the supplier
- * @param {org.acme.IPRTestNetwork.BackOrder} purchase - the order to be processed
+ * @param {org.acme.Z2BTestNetwork.BackOrder} purchase - the order to be processed
  * @transaction
  */
 function BackOrder(purchase) {

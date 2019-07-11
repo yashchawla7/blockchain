@@ -1,6 +1,4 @@
 #!/bin/bash
-
-export HLF_INSTALL_PATH=/home/yash/fabric-tools
  
  YELLOW='\033[1;33m'
  RED='\033[1;31m'

@@ -37,7 +37,7 @@ function printHelp ()
     echo ""
     echo -e "${RESET} options for this exec are: "
     echo -e "${GREEN}-h ${RESET}Print this help information" | indent
-    echo -e "${GREEN}-n ${RESET}defaults to ${GREEN}intellectual-property-network${RESET}. use ${YELLOW}-n your-named-network ${RESET}if you are using a different network name"  | indent
+    echo -e "${GREEN}-n ${RESET}defaults to ${GREEN}zerotoblockchain-network${RESET}. use ${YELLOW}-n your-named-network ${RESET}if you are using a different network name"  | indent
     echo -e "\t\tyou will have to ensure that the name you use here is also the name you use in BOTH package.json files and in your application code" | indent
     echo ""
     echo ""
@@ -47,14 +47,14 @@ function printHelp ()
 function printHeader ()
 {
     echo ""
-    echo -e "${YELLOW}network archive, start and deploy script for the Intellectual property registration blockchain Series" | indent
+    echo -e "${YELLOW}network archive, start and deploy script for the Zero To Blockchain Series" | indent
     echo -e "${GREEN}This has been tested on Mac OSX thru High Sierra and Ubuntu V16 LTS" | indent
     echo -e "${YELLOW}This script will create your Composer archive" | indent
     echo ""
 }
 # get the command line options
 
-NETWORK_NAME="intellectual-property-network"
+NETWORK_NAME="zerotoblockchain-network"
 
  while getopts "h:n:" opt; 
 do
@@ -80,7 +80,7 @@ showStep "testing rest server \n when this completes, \n  go to your favorite br
 # original (pre V0.14)
 # composer-rest-server -p hlfv1 -n $NETWORK_NAME -i PeerAdmin -s randomString
 # V0.14
-# composer-rest-server -p hlfv1 -n intellectual-property-network -i admin -s adminPW
+# composer-rest-server -p hlfv1 -n zerotoblockchain-network -i admin -s adminPW
 # V0.15
 showStep "starting rest server v0.16 for admin@$NETWORK_NAME"
 composer-rest-server -c "admin@$NETWORK_NAME"

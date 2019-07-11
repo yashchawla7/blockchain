@@ -2,13 +2,13 @@
   "engines": {
     "composer": ""
   },
-  "name": "intellectual-property-network",
-  "version": "0.1.7",
-  "description": "Intellectual property registration blockchain network",
+  "name": "zerotoblockchain-network",
+  "version": "0.1.6",
+  "description": "Zero to Blockchain tutorial network",
   "networkImage": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimage.svg",
   "networkImageanimated": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimageanimated.svg",
   "scripts": {
-    "prepublish": "mkdirp ./network/dist && composer archive create --sourceType dir --sourceName . -a ./network/dist/intellectual-property-network.bna",
+    "prepublish": "mkdirp ./network/dist && composer archive create --sourceType dir --sourceName . -a ./network/dist/zerotoblockchain-network.bna",
     "pretest": "npm run lint",
     "lint": "eslint ./network",
     "postlint": "npm run licchk",
@@ -22,16 +22,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yashchawla7/blockchain"
+    "url": "https://github.com/rddill-IBM/ZeroToBlockchain"
   },
   "keywords": [
-    "hexoindia",
+    "zero",
     "blockchain",
-    "fabric",
+    "tutorial",
     "composer",
     "hyperledger"
   ],
-  "author": "Papan Das<hexoindia@gmail.com>",
+  "author": "Bob Dill, IBM Distinguished Engineer",
   "license": "Apache-2.0",
   "devDependencies": {
     "extend": "",
