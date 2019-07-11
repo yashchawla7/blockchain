@@ -116,7 +116,7 @@ exports.getAllUser = function (req, res, next) {
                         .catch((error) => { console.log('error with getParticipantRegistry', error); res.send(error); });
                 })
                 .catch((error) => { console.log('error with businessNetworkConnection', error); res.send(error); });
-        }
+        })
 
     
 };
