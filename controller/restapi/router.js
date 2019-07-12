@@ -32,21 +32,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage : storage});
 
 let hlcMain = require('./features/composer/hlcMain');
-/*let multi_lingual = require('./features/multi_lingual');
-let resources = require('./features/resources');
-let getCreds = require('./features/getCredentials');
-let hlcAdmin = require('./features/composer/hlcAdmin');
-let hlcClient = require('./features/composer/hlcClient');
-let setup = require('./features/composer/autoLoad');
-let hlcFabric = require('./features/composer/queryBlockChain');
 
-
-router.get('/fabric/getChainInfo', hlcFabric.getChainInfo);
-router.get('/fabric/getChainEvents', hlcFabric.getChainEvents);
-router.get('/fabric/getHistory', hlcAdmin.getHistory);
-
-router.post('/setup/autoLoad*', setup.autoLoad);
-router.get('/composer/client/initEventRegistry*', hlcClient.init_z2bEvents);*/
 
 module.exports = router;
 let count = 0;
@@ -71,44 +57,4 @@ router.post('/composer/admin/updateState*', hlcMain.updateState);
 router.get('/composer/admin/getAllUser*', hlcMain.getAllUser);
 router.post('/api/blockchain/upload*', upload.single('userPhoto'), hlcMain.uploadFiles);
 
-// the following get and post statements tell nodeJS what to do when a request comes in
-// The request is the single quoted phrase following the get( or post( statement. 
-// the text at the end identifies which function in which require(d) module to implement
-// These are searched in order by get/post request. 
-// The asterisk (*) means 'ignore anything following this point'
-// which means we have to be careful about ordering these statements. 
-//
-/*router.get('/api/getSupportedLanguages*',multi_lingual.languages);
-router.get('/api/getTextLocations*',multi_lingual.locations);
-router.post('/api/selectedPrompts*',multi_lingual.prompts);
-
-router.get('/resources/getDocs*',resources.getDocs);
-router.get('/resources/getEducation*',resources.getEducation);
-
-router.get('/getCreds*', getCreds.getServiceCreds);
-
-router.get('/composer/admin/connect*', hlcAdmin.adminConnect);
-router.get('/composer/admin/getCreds*', hlcAdmin.getCreds);
-router.get('/composer/admin/getAllProfiles*', hlcAdmin.getAllProfiles);
-router.get('/composer/admin/listAsAdmin*', hlcAdmin.listAsAdmin);
-router.get('/composer/admin/getRegistries*', hlcAdmin.getRegistries);
-
-router.post('/composer/admin/createProfile*', hlcAdmin.createProfile);
-router.post('/composer/admin/deleteProfile*', hlcAdmin.deleteProfile);
-router.post('/composer/admin/deploy*', hlcAdmin.deploy);
-router.post('/composer/admin/install*', hlcAdmin.networkInstall);
-router.post('/composer/admin/start*', hlcAdmin.networkStart);
-router.post('/composer/admin/disconnect*', hlcAdmin.disconnect);
-router.post('/composer/admin/getProfile*', hlcAdmin.getProfile);
-router.post('/composer/admin/ping*', hlcAdmin.ping);
-router.post('/composer/admin/undeploy*', hlcAdmin.undeploy);
-router.post('/composer/admin/update*', hlcAdmin.update);
-router.post('/composer/admin/getMembers*', hlcAdmin.getMembers);
-router.post('/composer/admin/getAssets*', hlcAdmin.getAssets);
-router.post('/composer/admin/addMember*', hlcAdmin.addMember);
-router.post('/composer/admin/removeMember*', hlcAdmin.removeMember);
-router.post('/composer/admin/getSecret*', setup.getMemberSecret);
-router.post('/composer/admin/checkCard*', hlcAdmin.checkCard);
-router.post('/composer/admin/createCard*', hlcAdmin.createCard);
-router.post('/composer/admin/issueIdentity*', hlcAdmin.issueIdentity);*/
 
