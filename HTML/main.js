@@ -79,7 +79,7 @@ App = {
             if (status === 'success') {
 
                 if (data.success) {
-                    console.log("Load", data.user)
+                    //console.log("Load", data.user)
 
                     let str = `<table class="table table-hover">
                                 <thead>
