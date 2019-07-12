@@ -39,7 +39,7 @@ App = {
         const email = $('#inputEmail').val();
         const phonenum = $('#phoneNumber').val();
         const aadharnum = $('#aadharNumber').val();
-        const ipfile = $('#ipfile').val();
+        const ipfile = $('#fileName1').val();
 
         let payload = {
             name: name,
@@ -62,7 +62,7 @@ App = {
                     $('#inputEmail').val('');
                     $('#phoneNumber').val('');
                     $('#aadharNumber').val('');
-                    $('#ipfile').val('');
+                    $('#fileName1').val('');
                     App.showloader(false);
                 }
             }
