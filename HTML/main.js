@@ -98,6 +98,8 @@ App = {
 
                     str += `</tbody></table>`
 
+                    App.showloader(false)
+                    $('#container').html(str);
                     
                 }
             }
