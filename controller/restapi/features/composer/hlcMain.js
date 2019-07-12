@@ -25,6 +25,37 @@ const BusinessNetworkConnection = require('composer-client').BusinessNetworkConn
 const config = require('../../../env.json');
 const NS = 'org.acme.Z2BTestNetwork';
 
+exports.updateState = function(req, res, next){
+    let businessNetworkConnection;
+    let factory;
+    businessNetworkConnection = new BusinessNetworkConnection();
+    // connection prior to V0.15
+    // return businessNetworkConnection.connect(config.composer.connectionProfile, config.composer.network, config.composer.adminID, config.composer.adminPW)
+    // connection in v0.15
+    return businessNetworkConnection.connect(config.composer.adminCard)
+        .then(() => {
+            factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+            return businessNetworkConnection.getParticipantRegistry(NS + '.User')
+                .then(function (participantRegistry) {
+                    let ts = Date.now();
+
+                    return participantRegistry.get(req.body.userId)
+                    .then((participant) => {
+                        participant.state = req.body.state;
+                        participantRegistry.add(participant)
+                        .then(() => {console.log(participant.name+' successfully updated.'); res.send({ 'result': 'Successfully updated.', 'success': true});})
+                        .catch((error) => {console.log(participant.name+' update failed.', error); res.send({ 'result': error, 'success':false});});
+                    })
+                    .catch((_res) => {
+                        res.send('member do not exists. update cancle');
+                    });
+                })
+                .catch((error) => { console.log('error with getParticipantRegistry', error); res.send(error); });
+        })
+        .catch((error) => { console.log('error with businessNetworkConnection', error); res.send(error); });
+
+}
+
 exports.addUser = function (req, res, next) {
     let businessNetworkConnection;
     let factory;
@@ -38,18 +69,6 @@ exports.addUser = function (req, res, next) {
             return businessNetworkConnection.getParticipantRegistry(NS + '.User')
                 .then(function (participantRegistry) {
                     let ts = Date.now();
-                    /*let participant = factory.newResource(NS, 'User', ts.toString());
-                    participant.userId = ts.toString();
-                    participant.name = 'name' + ts.toString();
-                    participant.email = 'email' + ts.toString();
-                    participant.phoneNumber = 'phone' + ts.toString();
-                    participant.aadharNumber = 'aadhar' + ts.toString();
-                    participant.IPFile = 'IP FIle' + ts.toString();
-                    participant.state = 'state' + ts.toString();
-                    participantRegistry.add(participant)
-                        .then(() => { console.log('Successfully added'); res.send('Successfully added'); })
-                        .catch((error) => { console.log('Add failed', error); res.send(error); });*/
-
 
                     return participantRegistry.get(ts.toString())
                     .then((_res) => { res.send('member already exists. add cancelled');})

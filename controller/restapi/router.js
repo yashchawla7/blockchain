@@ -67,6 +67,7 @@ router.use(function(req, res, next) {
 
 
 router.post('/composer/admin/addUser*', hlcMain.addUser);
+router.post('/composer/admin/updateState*', hlcMain.updateState);
 router.get('/composer/admin/getAllUser*', hlcMain.getAllUser);
 router.post('/api/blockchain/upload*', upload.single('userPhoto'), hlcMain.uploadFiles);
 

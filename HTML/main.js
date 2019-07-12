@@ -136,10 +136,36 @@ App = {
         })
 
     },
-    uploadStatus: function(userid, selectid){
-        console.log("Update User:", userid, selectid);
-        let select = $(`#dropdownMenu${selectid}`).find(':selected').val()
-        console.log("Selected Value ", select)
+    uploadStatus: function(userId, selectid){
+        //console.log("Update User:", userId, selectid);
+        const userId = userId
+        const state = $(`#dropdownMenu${selectid}`).find(':selected').val()
+        //console.log("Selected Value ", select)
+        App.showloader(true);
+
+        let payload = {
+            userId: userId,
+            state: state
+        }
+
+        console.log(payload)
+        App.showloader(true);
+
+        $.post("/composer/admin/updateState", payload, function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+                    console.log("Updated succesfylly", data.result)
+                    
+                    App.showloader(false);
+
+                    App.loadAdminPage();
+
+                }
+            }
+        })
+
     },
 
     showloader: function (param, cont = 'main') {
@@ -180,8 +206,8 @@ App = {
         let fileName = $(".modal-body #fileName").val();
         let containerId = $(".modal-body #containerId").val();
 
-        console.log("Value Written to Model:::::::::ContainerID", containerId)
-        console.log("Value Written to Model:::::::::FileName", fileName)
+        //console.log("Value Written to Model:::::::::ContainerID", containerId)
+        //console.log("Value Written to Model:::::::::FileName", fileName)
 
         $(`#${containerId}`).val(fileName);
 
