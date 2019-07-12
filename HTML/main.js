@@ -136,9 +136,10 @@ App = {
         })
 
     },
+
     uploadStatus: function(userId, selectid){
-        //console.log("Update User:", userId, selectid);
-        const userId = userId
+        console.log("Update User:", userId, selectid);
+        //const userId = userId
         const state = $(`#dropdownMenu${selectid}`).find(':selected').val()
         //console.log("Selected Value ", select)
         App.showloader(true);
