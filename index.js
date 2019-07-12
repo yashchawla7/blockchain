@@ -61,6 +61,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/HTML'));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Define your own router file in controller folder, export the router, add it into the index.js.
 

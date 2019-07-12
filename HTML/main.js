@@ -103,7 +103,7 @@ App = {
                                     <td>${arr[idx].email}</td>
                                     <td>${arr[idx].phoneNumber}</td>
                                     <td>${arr[idx].aadharNumber}</td>
-                                    <td><a href="./uploads/${arr[idx].IPFile}" target="_blank">${arr[idx].IPFile}</a></td>
+                                    <td><a href="${App.baseURL}/uploads/${arr[idx].IPFile}" target="_blank">${arr[idx].IPFile}</a></td>
                                     <td>${arr[idx].state}</td>
                                     <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.uploadStatus('${arr[idx].userId}'); return false;">Update</button></td>
                                 </tr>`
