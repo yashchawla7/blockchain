@@ -105,7 +105,32 @@ App = {
                                     <td>${arr[idx].aadharNumber}</td>
                                     <td><a href="${App.baseURL}/uploads/${arr[idx].IPFile}" target="_blank">${arr[idx].IPFile}</a></td>
                                     <td>${arr[idx].state}</td>
-                                    <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.uploadStatus('${arr[idx].userId}'); return false;">Update</button></td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink${idx}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="App.uploadStatus('${arr[idx].userId}','${idx}'); return false;">
+                                            Update Status
+                                            </a>
+                                        
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink${idx}">
+                                                <a class="dropdown-item" href="#">Uploaded</a>
+                                                <a class="dropdown-item" href="#">Submitted to government</a>
+                                                <a class="dropdown-item" href="#">Approved</a>
+                                                <a class="dropdown-item" href="#">Rejected</a>
+                                                <a class="dropdown-item" href="#">Appeal</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col">
+                                                
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.uploadStatus('${arr[idx].userId}'); return false;">Update</button>
+                                            </div>
+                                        </div>
+                                    
+                                    </td>
                                 </tr>`
                         })(each, data.user)
                     }
@@ -120,8 +145,10 @@ App = {
         })
 
     },
-    uploadStatus: function(userid){
-        console.log("Update User:", userid);
+    uploadStatus: function(userid, selectid){
+        console.log("Update User:", userid, selectid);
+        let select = $(`#dropdownMenuLink${selectid}`).val()
+        console.log("Selected Value ", select)
     },
 
     showloader: function (param, cont = 'main') {
