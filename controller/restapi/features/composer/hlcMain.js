@@ -38,7 +38,7 @@ exports.addUser = function (req, res, next) {
             return businessNetworkConnection.getParticipantRegistry(NS + '.User')
                 .then(function (participantRegistry) {
                     let ts = Date.now();
-                    let participant = factory.newResource(NS, 'User', ts.toString());
+                    /*let participant = factory.newResource(NS, 'User', ts.toString());
                     participant.userId = ts.toString();
                     participant.name = 'name' + ts.toString();
                     participant.email = 'email' + ts.toString();
@@ -48,14 +48,14 @@ exports.addUser = function (req, res, next) {
                     participant.state = 'state' + ts.toString();
                     participantRegistry.add(participant)
                         .then(() => { console.log('Successfully added'); res.send('Successfully added'); })
-                        .catch((error) => { console.log('Add failed', error); res.send(error); });
+                        .catch((error) => { console.log('Add failed', error); res.send(error); });*/
 
 
-                    /*return participantRegistry.get(req.body.id)
+                    return participantRegistry.get(ts.toString())
                     .then((_res) => { res.send('member already exists. add cancelled');})
                     .catch((_res) => {
-                        console.log(req.body.id+' not in '+req.body.type+' registry. ');
-                        let participant = factory.newResource(NS, req.body.type,req.body.id);
+                        console.log(ts.toString() +' not in User registry. ');
+                        let participant = factory.newResource(NS, 'User', ts.toString());
                         participant.userId = ts.toString();
                         participant.name = req.body.name;
                         participant.email = req.body.email;
@@ -64,9 +64,9 @@ exports.addUser = function (req, res, next) {
                         participant.IPFile = req.body.IPFile;
                         participant.state = 'CREATED';
                         participantRegistry.add(participant)
-                        .then(() => {console.log(req.body.companyName+' successfully added'); res.send(req.body.companyName+' successfully added');})
-                        .catch((error) => {console.log(req.body.companyName+' add failed',error); res.send(error);});
-                    });*/
+                        .then(() => {console.log(req.body.name+' successfully added'); res.send({ 'result': 'Successfully saved.', 'success': true});})
+                        .catch((error) => {console.log(req.body.name+' add failed', error); res.send({ 'result': error, 'success':false});});
+                    });
                 })
                 .catch((error) => { console.log('error with getParticipantRegistry', error); res.send(error); });
         })

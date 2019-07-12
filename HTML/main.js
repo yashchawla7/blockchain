@@ -50,14 +50,20 @@ App = {
         }
 
         console.log(payload)
+        App.showloader(true);
 
         $.post("/composer/admin/addUser", payload, function (data, status) {
 
             if (status === 'success') {
 
                 if (data.success) {
-                    console.log("Load", data.canvas.register.length)
-
+                    console.log("Saveed succesfylly", data.result)
+                    $('#inputName').val('');
+                    $('#inputEmail').val('');
+                    $('#phoneNumber').val('');
+                    $('#aadharNumber').val('');
+                    $('#ipfile').val('');
+                    App.showloader(false);
                 }
             }
         })
