@@ -1,5 +1,5 @@
 App = {
-    baseURL: `http://${window.location.hostname}:6002`,
+    baseURL: `http://${window.location.hostname}:6001`,
     page: 'register',//register //test
     init: function () {
         console.log("App initialized....");
@@ -103,7 +103,7 @@ App = {
                                     <td>${arr[idx].email}</td>
                                     <td>${arr[idx].phoneNumber}</td>
                                     <td>${arr[idx].aadharNumber}</td>
-                                    <td>${arr[idx].IPFile}</td>
+                                    <td><a href="${App.baseURL}/uploads/${arr[idx].IPFile}" target="_blank">${arr[idx].IPFile}</a></td>
                                     <td>${arr[idx].state}</td>
                                     <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.uploadStatus('${arr[idx].userId}'); return false;">Update</button></td>
                                 </tr>`

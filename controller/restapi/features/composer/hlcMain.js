@@ -97,12 +97,12 @@ exports.getAllUser = function (req, res, next) {
 
                             return participantRegistry.getAll()
                                 .then((members) => {
-                                    console.log('There are ' + members.length + ' entries.');
+                                    //console.log('There are ' + members.length + ' entries.');
 
                                     for (let each in members) {
                                         (function (_idx, _arr) {
                                             let _jsn = serializer.toJSON(_arr[_idx]);
-                                            console.log(_idx, _jsn)
+                                            //console.log(_idx, _jsn)
                                             let participant = {}
                                             participant.userId = _jsn.userId;
                                             participant.name = _jsn.name;
@@ -111,7 +111,7 @@ exports.getAllUser = function (req, res, next) {
                                             participant.aadharNumber = _jsn.aadharNumber;
                                             participant.IPFile = _jsn.IPFile;
                                             participant.state = _jsn.state;
-                                            console.log("Participant", participant)
+                                            //console.log("Participant", participant)
                                             allUser.push(participant);
                                         })(each, members)
                                     }
