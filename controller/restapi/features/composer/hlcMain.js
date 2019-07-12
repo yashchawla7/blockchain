@@ -56,13 +56,13 @@ exports.addUser = function (req, res, next) {
                     .catch((_res) => {
                         console.log(req.body.id+' not in '+req.body.type+' registry. ');
                         let participant = factory.newResource(NS, req.body.type,req.body.id);
-                        participant.userId = req.body.userId;
+                        participant.userId = ts.toString();
                         participant.name = req.body.name;
                         participant.email = req.body.email;
                         participant.phoneNumber = req.body.phoneNumber;
                         participant.aadharNumber = req.body.aadharNumber;
                         participant.IPFile = req.body.IPFile;
-                        participant.state = req.body.state;
+                        participant.state = 'CREATED';
                         participantRegistry.add(participant)
                         .then(() => {console.log(req.body.companyName+' successfully added'); res.send(req.body.companyName+' successfully added');})
                         .catch((error) => {console.log(req.body.companyName+' add failed',error); res.send(error);});
@@ -103,7 +103,16 @@ exports.getAllUser = function (req, res, next) {
                                         (function (_idx, _arr) {
                                             let _jsn = serializer.toJSON(_arr[_idx]);
                                             console.log(_idx, _jsn)
-                                            allUser.push(_jsn);
+                                            let participant = {}
+                                            participant.userId = _jsn.userId;
+                                            participant.name = _jsn.name;
+                                            participant.email = _jsn.email;
+                                            participant.phoneNumber = _jsn.phoneNumber;
+                                            participant.aadharNumber = _jsn.aadharNumber;
+                                            participant.IPFile = _jsn.IPFile;
+                                            participant.state = _jsn.state;
+                                            console.log("Participant", participant)
+                                            allUser.push(participant);
                                         })(each, members)
                                     }
 
@@ -118,5 +127,15 @@ exports.getAllUser = function (req, res, next) {
                 .catch((error) => { console.log('error with businessNetworkConnection', error); res.send(error); });
         })
 
-    
+
 };
+
+
+exports.uploadFiles = async (req, res, next) => {
+
+    res.status(200).json({
+        message: 'File uploaded Successful!',
+        request: req.file,
+        status: true
+    });
+}

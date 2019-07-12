@@ -1,6 +1,7 @@
 
 autogitpush.sh
 package-lock.json
+public/uploads/*
 
 # Logs
 logs

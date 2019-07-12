@@ -35,6 +35,33 @@ App = {
     },
     saveToBC_registerUser: function(){
 
+        const name = $('#inputName').val();
+        const email = $('#inputEmail').val();
+        const phonenum = $('#phoneNumber').val();
+        const aadharnum = $('#aadharNumber').val();
+        const ipfile = $('#ipfile').val();
+
+        let payload = {
+            name: name,
+            email: email,
+            phoneNumber: phonenum,
+            aadharNumber: aadharnum,
+            IPFile: ipfile
+        }
+
+        console.log(payload)
+
+        $.post(App.baseURL + "/composer/admin/addUser", payload, function (data, status) {
+
+            if (status === 'success') {
+
+                if (data.success) {
+                    console.log("Load", data.canvas.register.length)
+
+                }
+            }
+        })
+
     },
     loadAdminPage: function(){
         App.showloader(false);
@@ -50,7 +77,7 @@ App = {
 
                 }
             }
-        }
+        })
 
     },
 
@@ -81,6 +108,25 @@ App = {
         }
 
     },
+    showUploadModal: function(container){
+        $('#exampleModal').modal('show'); // show , toggle
+        $(".modal-body #userPhoto").val('');
+        $(".modal-body #status").empty();
+        $(".modal-body #fileName").val('');
+        $(".modal-body #containerId").val(container);
+    },
+    hideUploadModal: function(){
+        
+        let fileName = $(".modal-body #fileName").val();
+        let containerId = $(".modal-body #containerId").val();
+
+        console.log("Value Written to Model:::::::::ContainerID", containerId)
+        console.log("Value Written to Model:::::::::FileName", fileName)
+
+        $(`#${containerId}`).val(fileName);
+        
+        $('#exampleModal').modal('hide');
+    }
 }
 
 $(function () {

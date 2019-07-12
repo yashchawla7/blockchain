@@ -18,6 +18,18 @@
 let express = require('express');
 let router = express.Router();
 let format = require('date-format');
+let multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './public/uploads');
+    },
+    filename: function (req, file, callback) {
+        callback(null, Date.now() + '-' + file.originalname )
+    }
+});
+//+ path.extname(file.originalname)
+var upload = multer({ storage : storage});
 
 let hlcMain = require('./features/composer/hlcMain');
 /*let multi_lingual = require('./features/multi_lingual');
@@ -56,6 +68,7 @@ router.use(function(req, res, next) {
 
 router.get('/composer/admin/addUser*', hlcMain.addUser);
 router.get('/composer/admin/getAllUser*', hlcMain.getAllUser);
+router.post('/api/blockchain/upload*', upload.single('userPhoto'), hlcMain.uploadFiles);
 
 // the following get and post statements tell nodeJS what to do when a request comes in
 // The request is the single quoted phrase following the get( or post( statement. 
