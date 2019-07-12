@@ -26,14 +26,14 @@ App = {
         }
         App.showloader(false);
     },
-    loadRegisterPage: function(){
+    loadRegisterPage: function () {
         App.showloader(false);
 
         $('#container').empty();
-        
+
         $('#container').load('register-page.html')
     },
-    saveToBC_registerUser: function(){
+    saveToBC_registerUser: function () {
 
         const name = $('#inputName').val();
         const email = $('#inputEmail').val();
@@ -63,8 +63,8 @@ App = {
         })
 
     },
-    loadAdminPage: function(){
-        App.showloader(false);
+    loadAdminPage: function () {
+        App.showloader(true);
 
         $('#container').empty();
 
@@ -79,23 +79,26 @@ App = {
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone Number</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                </tbody>
-                            </table>`
-                    
-                    
+                                <tbody>`
+                                
+                    for (let each in data.user) {
+                        (function (idx, arr) {
+                            str += `<tr><th scope="row">${parseInt(idx) + 1}</th>
+                                    <td>${arr[idx].name}</td>
+                                    <td>${arr[idx].email}</td>
+                                    <td>${arr[idx].phoneNumber}</td>
+                                </tr>`
+                        })(each, data.user)
+                    }
 
+                    str += `</tbody></table>`
+
+                    
                 }
             }
         })
@@ -129,15 +132,15 @@ App = {
         }
 
     },
-    showUploadModal: function(container){
+    showUploadModal: function (container) {
         $('#exampleModal').modal('show'); // show , toggle
         $(".modal-body #userPhoto").val('');
         $(".modal-body #status").empty();
         $(".modal-body #fileName").val('');
         $(".modal-body #containerId").val(container);
     },
-    hideUploadModal: function(){
-        
+    hideUploadModal: function () {
+
         let fileName = $(".modal-body #fileName").val();
         let containerId = $(".modal-body #containerId").val();
 
@@ -145,7 +148,7 @@ App = {
         console.log("Value Written to Model:::::::::FileName", fileName)
 
         $(`#${containerId}`).val(fileName);
-        
+
         $('#exampleModal').modal('hide');
     }
 }
