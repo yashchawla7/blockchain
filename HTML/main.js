@@ -145,7 +145,7 @@ App = {
 
         let payload = {
             userId: userId,
-            state: state
+            state: state.toUpperCase()
         }
 
         console.log(payload)
