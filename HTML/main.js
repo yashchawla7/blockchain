@@ -51,7 +51,7 @@ App = {
 
         console.log(payload)
 
-        $.post(App.baseURL + "/composer/admin/addUser", payload, function (data, status) {
+        $.post("/composer/admin/addUser", payload, function (data, status) {
 
             if (status === 'success') {
 
@@ -68,12 +68,33 @@ App = {
 
         $('#container').empty();
 
-        $.get(App.baseURL + "/composer/admin/getAllUser", function (data, status) {
+        $.get("/composer/admin/getAllUser", function (data, status) {
 
             if (status === 'success') {
 
                 if (data.success) {
-                    console.log("Load", data.canvas.register.length)
+                    console.log("Load", data.user)
+
+                    let str = `<table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First</th>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                </tbody>
+                            </table>`
+                    
+                    
 
                 }
             }
