@@ -41,11 +41,11 @@ exports.updateState = function(req, res, next){
 
                     return participantRegistry.get(req.body.userId)
                     .then((participant) => {
-                        console.log("[Before]")
-                        console.log(participant)
+                        //console.log("[Before]")
+                        //console.log(participant)
                         participant.state = req.body.state;
-                        console.log("[After]")
-                        console.log(participant)
+                        //console.log("[After]")
+                        //console.log(participant)
                         participantRegistry.update(participant)
                         .then(() => {console.log(participant.name+' successfully updated.'); res.send({ 'result': 'Successfully updated.', 'success': true});})
                         .catch((error) => {console.log(participant.name+' update failed.', error); res.send({ 'result': error, 'success':false});});
