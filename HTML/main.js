@@ -82,6 +82,10 @@ App = {
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Phone Number</th>
+                                    <th scope="col">Aadhar Number</th>
+                                    <th scope="col">IP File</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>`
@@ -92,6 +96,10 @@ App = {
                                     <td>${arr[idx].name}</td>
                                     <td>${arr[idx].email}</td>
                                     <td>${arr[idx].phoneNumber}</td>
+                                    <td>${arr[idx].aadharNumber}</td>
+                                    <td>${arr[idx].IPFile}</td>
+                                    <td>${arr[idx].state}</td>
+                                    <td><button class="btn btn-primary btn-sm btn-block" type="submit" onclick="App.uploadStatus('${arr[idx].userId}'); return false;">Update</button></td>
                                 </tr>`
                         })(each, data.user)
                     }
@@ -106,7 +114,9 @@ App = {
         })
 
     },
-
+    uploadStatus: function(userid){
+        console.log("Update User:", userid);
+    },
 
     showloader: function (param, cont = 'main') {
         switch (cont) {
